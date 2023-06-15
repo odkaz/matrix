@@ -9,14 +9,13 @@ fn test_vector() {
     let v: Vector<f64> = Vector::from([5., 7.]);
 
     u.add(&v);
-    println!("{}", u);
     u.out();
     // [7.0]
     // [10.0]
     let mut u = Vector::from([2., 3.]);
     let v = Vector::from([5., 7.]);
-    let mut res = u + v;
-    res.out();
+    u.sub(&v);
+    u.out();
     // [-3.0]
     // [-4.0]
     let mut u = Vector::from([2., 3.]);
@@ -28,16 +27,14 @@ fn test_vector() {
 
 fn test_matrix() {
     let mut u = Matrix::from([
-        [1., 2., 3.],
-        [4., 5., 6.],
-        [7., 8., 9.]
+        [1., 2.],
+        [3., 4.],
     ]);
     let v = Matrix::from([
         [7., 4.,],
         [-2., 2.],
-        [-4., -2.]
     ]);
-    let res = u * v;
+    u.add(&v);
     println!("{}", res);
     // [8.0, 6.0]
     // [1.0, 6.0]

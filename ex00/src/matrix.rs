@@ -1,7 +1,9 @@
 use std::clone::Clone;
 use std::fmt::Display;
 use std::ops::{Add, Mul, Sub};
+use std::default::Default;
 
+#[derive(Debug)]
 pub struct Matrix<T> {
     data: Vec<Vec<T>>,
     width: usize,
@@ -78,6 +80,32 @@ impl<T: Display + Mul<Output = T> + Clone + Copy> Matrix<T> {
             res.push(v);
         }
         self.data = res;
+    }
+}
+
+
+
+
+impl<T: Default + Add<Output = T> + Mul<Output = T> + Copy> Mul<Matrix<T>> for Matrix<T> {
+    type Output = Matrix<T>;
+     fn mul(self, rhs: Matrix<T>) -> Matrix<T>{
+        let mut res = Vec::new();
+        for j in 0..self.height {
+            let mut v = Vec::new();
+            for i in 0..rhs.width {
+                let mut sum: T = Default::default();
+                for k in 0..self.width {
+                    sum = sum + (self.data[j][k] * rhs.data[k][i]);
+                }
+                v.push(sum);
+            }
+            res.push(v);
+        }
+        Matrix {
+            data: res,
+            width: rhs.width,
+            height: self.height,
+        }
     }
 }
 
