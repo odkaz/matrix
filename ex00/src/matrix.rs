@@ -2,6 +2,7 @@ use std::clone::Clone;
 use std::fmt::Display;
 use std::ops::{Add, Mul, Sub};
 use std::default::Default;
+use std::process::id;
 
 #[derive(Debug)]
 pub struct Matrix<T> {
@@ -83,9 +84,6 @@ impl<T: Display + Mul<Output = T> + Clone + Copy> Matrix<T> {
     }
 }
 
-
-
-
 impl<T: Default + Add<Output = T> + Mul<Output = T> + Copy> Mul<Matrix<T>> for Matrix<T> {
     type Output = Matrix<T>;
      fn mul(self, rhs: Matrix<T>) -> Matrix<T>{
@@ -106,6 +104,26 @@ impl<T: Default + Add<Output = T> + Mul<Output = T> + Copy> Mul<Matrix<T>> for M
             width: rhs.width,
             height: self.height,
         }
+    }
+}
+
+
+pub fn identity_array() -> [[f32; 4]; 4] {
+    let mut trans:[[f32; 4]; 4] = [[0.; 4]; 4];
+    trans[0][0] = 1.;
+    trans[1][1] = 1.;
+    trans[2][2] = 1.;
+    trans[3][3] = 1.;
+    trans
+}
+
+impl Matrix<f32> {
+    pub fn translation(x: f32, y: f32, z:f32) -> Matrix<f32> {
+        let mut trans:[[f32; 4]; 4] = identity_array();
+        trans[0][3] = x;
+        trans[1][3] = y;
+        trans[2][3] = z;
+        Matrix::from(trans)
     }
 }
 

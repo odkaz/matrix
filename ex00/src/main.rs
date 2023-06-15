@@ -54,6 +54,8 @@ fn test_matrix() {
     // println!("{}", u);
     // [2.0, 4.0]
     // [6.0, 8.0]
+    let mut trans = Matrix::translation(1.,2.,3.);
+    trans.out();
 }
 
 fn main() {
