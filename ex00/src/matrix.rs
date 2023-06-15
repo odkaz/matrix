@@ -1,4 +1,5 @@
 use std::clone::Clone;
+use std::f32::consts::PI;
 use std::fmt::Display;
 use std::ops::{Add, Mul, Sub};
 use std::default::Default;
@@ -124,6 +125,60 @@ impl Matrix<f32> {
         trans[1][3] = y;
         trans[2][3] = z;
         Matrix::from(trans)
+    }
+}
+
+impl Matrix<f32> {
+    pub fn scale(x: f32, y: f32, z:f32) -> Matrix<f32> {
+        let mut scale:[[f32; 4]; 4] = identity_array();
+        scale[0][0] = x;
+        scale[1][1] = y;
+        scale[2][2] = z;
+        Matrix::from(scale)
+    }
+}
+
+fn degree_to_radians(degree: f32) -> f32 {
+    degree / 180. * PI
+}
+
+impl Matrix<f32> {
+    pub fn rotation_x(degrees: f32) -> Matrix<f32> {
+        let t: f32 = degree_to_radians(degrees);
+        let mut rot_x:[[f32; 4]; 4] = identity_array();
+        rot_x[1][1] = f32::cos(t);
+        rot_x[1][2] = -f32::sin(t);
+        rot_x[2][1] = f32::sin(t);
+        rot_x[2][2] = f32::cos(t);
+        Matrix::from(rot_x)
+    }
+
+    pub fn rotation_y(degrees: f32) -> Matrix<f32> {
+        let t: f32 = degree_to_radians(degrees);
+        let mut rot_y:[[f32; 4]; 4] = identity_array();
+        rot_y[0][0] = f32::cos(t);
+        rot_y[0][2] = f32::sin(t);
+        rot_y[2][0] = -f32::sin(t);
+        rot_y[2][2] = f32::cos(t);
+        Matrix::from(rot_y)
+    }
+
+    pub fn rotation_z(degrees: f32) -> Matrix<f32> {
+        let t: f32 = degree_to_radians(degrees);
+        let mut rot_z:[[f32; 4]; 4] = identity_array();
+        rot_z[0][0] = f32::cos(t);
+        rot_z[0][1] = -f32::sin(t);
+        rot_z[1][0] = f32::sin(t);
+        rot_z[1][1] = f32::cos(t);
+        Matrix::from(rot_z)
+    }
+
+    pub fn rotation(x: f32, y: f32, z:f32) -> Matrix<f32> {
+        let mut rot_x = Self::rotation_x(x);
+        let mut rot_y = Self::rotation_y(y);
+        let mut rot_z = Self::rotation_z(z);
+        // Self::rotation_x(x) * Self::rotation_y(t_y) * Self::rotation_z(t_z)
+        rot_x * rot_y * rot_z
     }
 }
 

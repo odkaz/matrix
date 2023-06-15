@@ -54,8 +54,29 @@ fn test_matrix() {
     // println!("{}", u);
     // [2.0, 4.0]
     // [6.0, 8.0]
+
+
     let mut trans = Matrix::translation(1.,2.,3.);
     trans.out();
+
+    println!("-----");
+    let mut rot_x = Matrix::rotation_x(30.);
+    rot_x.out();
+    println!("-----");
+
+    let mut rot_y = Matrix::rotation_y(0.);
+    rot_y.out();
+    println!("-----");
+
+    let mut rot_z = Matrix::rotation_z(0.);
+    rot_z.out();
+    println!("-----");
+
+    let mut rot = Matrix::rotation(30., 0., 0.);
+    rot.out();
+
+    let mut t = rot_x * rot_y * rot_z;
+    t.out();
 }
 
 fn main() {
