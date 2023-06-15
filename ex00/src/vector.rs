@@ -1,7 +1,5 @@
-
-use std::ops::{Add, Sub, Mul};
 use std::fmt::Display;
-
+use std::ops::{Add, Mul, Sub};
 
 pub struct Vector<T> {
     data: Vec<T>,
@@ -12,10 +10,7 @@ impl<T, const N: usize> From<[T; N]> for Vector<T> {
     fn from(s: [T; N]) -> Vector<T> {
         let d = Vec::from(s);
         let l = d.len();
-        return Vector {
-            data: d,
-            len: l,
-        }
+        return Vector { data: d, len: l };
     }
 }
 
@@ -25,7 +20,7 @@ impl<T: std::fmt::Debug> Vector<T> {
     }
 }
 
-impl<T: Display + Add<Output = T> + Clone> Vector<T>{
+impl<T: Display + Add<Output = T> + Clone> Vector<T> {
     pub fn add(&mut self, v: &Vector<T>) {
         let it1 = self.data.iter();
         let it2 = v.data.iter();
@@ -39,7 +34,7 @@ impl<T: Display + Add<Output = T> + Clone> Vector<T>{
     }
 }
 
-impl<T: Display + Sub<Output = T> + Clone> Vector<T>{
+impl<T: Display + Sub<Output = T> + Clone> Vector<T> {
     pub fn sub(&mut self, v: &Vector<T>) {
         let it1 = self.data.iter();
         let it2 = v.data.iter();
@@ -53,7 +48,7 @@ impl<T: Display + Sub<Output = T> + Clone> Vector<T>{
     }
 }
 
-impl<T: Display + Mul<Output = T> + Clone + Copy> Vector<T>{
+impl<T: Display + Mul<Output = T> + Clone + Copy> Vector<T> {
     pub fn scl(&mut self, a: T) {
         let it = self.data.iter();
         let mut v = Vec::new();
@@ -61,5 +56,19 @@ impl<T: Display + Mul<Output = T> + Clone + Copy> Vector<T>{
             v.push(item.clone() * a);
         }
         self.data = v;
+    }
+}
+
+impl<T: Display> Display for Vector<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "[").unwrap();
+        for i in 0..self.len {
+            if i != 0 {
+                write!(f, ", ").unwrap();
+            }
+            write!(f, "{}", self.data[i]).unwrap();
+        }
+        write!(f, "]").unwrap();
+        Ok(())
     }
 }
