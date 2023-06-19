@@ -1,6 +1,7 @@
 use std::fmt::Display;
-use std::ops::{Add, Mul, Sub};
+use std::ops::{Add, Mul, Sub, Index};
 extern crate num;
+
 use num::{Float};
 pub type TVector<T, const R: usize> = Vector<T, R>;
 pub type TVector2<T> = TVector<T, 2>;
@@ -24,6 +25,16 @@ impl<T, const N: usize> From<[T; N]> for Vector<T, N> {
 impl<T: std::fmt::Debug, const N: usize> Vector<T, N> {
     pub fn out(&self) {
         println!("{:?}", self.data);
+    }
+}
+
+impl<T, const N: usize> Index<usize> for Vector<T, N> {
+    type Output = T;
+    fn index(&self, index: usize) -> &T {
+        if index >= N {
+            panic!("Vector: index out of bound");
+        }
+        &self.data[index]
     }
 }
 

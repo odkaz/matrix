@@ -11,8 +11,9 @@ fn test_vector() {
 
     let mut u = Vector::from([2., 3., 4.]);
     let v = Vector::from([5., 6., 7.]);
-    let mut r = u - v;
-    r.out();
+    // let mut r = u - v;
+    println!("{}{}{}", &u[0], &u[1], &u[3]);
+    // r.out();
     // u.add(&v);
     // let mut r = Vector::cross_product(&u, &v);
     // println!("{}", u.normalize());
