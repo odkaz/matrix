@@ -1,15 +1,15 @@
 pub mod vector;
-use vector::Vector;
+use vector::{Vector, TVector3};
 
 pub mod matrix;
 use matrix::Matrix;
 
 fn test_vector() {
-    let mut u = Vector::from([2., 3.]);
-    let v: Vector<f64> = Vector::from([5., 7.]);
+    let mut u = Vector::from([3., 4.]);
+    let v = Vector::from([5., 7.]);
 
-    u.add(&v);
-    println!("{}", u);
+    // u.add(&v);
+    println!("{}", u.normalize());
     u.out();
     // [7.0]
     // [10.0]
@@ -24,6 +24,16 @@ fn test_vector() {
     u.out();
     // [4.0]
     // [6.0]
+
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() {
+        let result = 2 + 2;
+        assert_eq!(result, 4);
+    }
 }
 
 fn test_matrix() {
@@ -56,29 +66,9 @@ fn test_matrix() {
     // [6.0, 8.0]
 
 
-    let mut trans = Matrix::translation(1.,2.,3.);
-    trans.out();
 
-    println!("-----");
-    let mut rot_x = Matrix::rotation_x(30.);
-    rot_x.out();
-    println!("-----");
-
-    let mut rot_y = Matrix::rotation_y(0.);
-    rot_y.out();
-    println!("-----");
-
-    let mut rot_z = Matrix::rotation_z(0.);
-    rot_z.out();
-    println!("-----");
-
-    let mut rot = Matrix::rotation(30., 0., 0.);
-    rot.out();
-
-    let mut t = rot_x * rot_y * rot_z;
-    t.out();
 }
 
 fn main() {
-    test_matrix();
+    test_vector();
 }

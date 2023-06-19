@@ -3,7 +3,6 @@ use std::f32::consts::PI;
 use std::fmt::Display;
 use std::ops::{Add, Mul, Sub};
 use std::default::Default;
-use std::process::id;
 
 #[derive(Debug)]
 pub struct Matrix<T> {
