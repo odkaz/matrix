@@ -5,12 +5,19 @@ pub mod matrix;
 use matrix::Matrix;
 
 fn test_vector() {
-    let mut u = Vector::from([3., 4.]);
-    let v = Vector::from([5., 7.]);
+    // let cameraPos = TVector3::from([0., 0., 0.]);
+    // let cameraTarget = TVector3::from([0., 0., 0.]);
+    // let cameraDirection = TVector3::normalize(cameraPos - cameraTarget);
 
+    let mut u = Vector::from([2., 3., 4.]);
+    let v = Vector::from([5., 6., 7.]);
+    let mut r = u - v;
+    r.out();
     // u.add(&v);
-    println!("{}", u.normalize());
-    u.out();
+    // let mut r = Vector::cross_product(&u, &v);
+    // println!("{}", u.normalize());
+    // r.out();
+    // u.out();
     // [7.0]
     // [10.0]
     let mut u = Vector::from([2., 3.]);

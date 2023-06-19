@@ -1,10 +1,7 @@
 use std::fmt::Display;
 use std::ops::{Add, Mul, Sub};
-use std::default::Default;
 extern crate num;
-use num::{Num, Float};
-// use std::num::FromPrimitive;
-
+use num::{Float};
 pub type TVector<T, const R: usize> = Vector<T, R>;
 pub type TVector2<T> = TVector<T, 2>;
 pub type TVector3<T> = TVector<T, 3>;
@@ -24,17 +21,8 @@ impl<T, const N: usize> From<[T; N]> for Vector<T, N> {
     }
 }
 
-// impl<T: Clone, const N: usize> Vector<T, N> {
-//     fn from(v: Vec<T>) -> Vector<T, N> {
-//         Vector {
-//             data: v.clone(),
-//             len: v.len(),
-//         }
-//     }
-// }
-
 impl<T: std::fmt::Debug, const N: usize> Vector<T, N> {
-    pub fn out(&mut self) {
+    pub fn out(&self) {
         println!("{:?}", self.data);
     }
 }
@@ -64,6 +52,19 @@ impl<T: Sub<Output = T> + Clone, const N: usize> Vector<T, N> {
             v.push(value);
         }
         self.data = v;
+    }
+}
+
+impl<T: Default + Sub<Output = T> + Copy, const N: usize> Sub<Vector<T, N>> for Vector<T, N> {
+    type Output = Vector<T, N>;
+    fn sub(self, rhs: Vector<T, N>) -> Vector<T, N> {
+        let mut res = [Default::default(); N];
+        let l = self.as_slice();
+        let r = rhs.as_slice();
+        for i in 0..N {
+            res[i] = l[i] - r[i];
+        }
+        Vector::from(res)    
     }
 }
 
@@ -120,15 +121,28 @@ impl<T , const N: usize> Mul<Vector<T, N>> for Vector<T, N> {
     }
 }
 
+impl<T, const N: usize> Vector<T, N> {
+    pub fn as_slice(&self) -> & [T] {
+        self.data.as_slice()
+    }
+}
 
+impl<T: Float, const N: usize> Vector<T, N> {
+    pub fn abs (&self) -> T {
+        let mut total = T::zero();
+        for i in 0..self.data.len() {
+            total = total + (self.data[i] * self.data[i]);
+        }
+        total.sqrt()
+    }
+}
 
-impl<T: Float + Display, const N: usize> Vector<T, N> {
+impl<T: Float, const N: usize> Vector<T, N> {
     pub fn normalize (&self) -> Vector<T, N> {
         let mut total = T::zero();
         for i in 0..self.data.len() {
             total = total + (self.data[i] * self.data[i]);
         }
-        println!("total{}", total);
         let sq = total.sqrt();
         let mut res = Vec::new();
         for item in self.data.clone() {
@@ -138,5 +152,17 @@ impl<T: Float + Display, const N: usize> Vector<T, N> {
             data: res.clone(),
             len: res.len(),
         }
+    }
+}
+
+impl<T: Float> TVector3<T> {
+    pub fn cross_product(u: &TVector3<T>, v: &TVector3<T>) -> TVector3<T> {
+        let mut res = [T::zero(); 3];
+        let u_arr = u.as_slice();
+        let v_arr = v.as_slice();
+        res[0] = u_arr[1] * v_arr[2] - u_arr[2] * v_arr[1];
+        res[1] = u_arr[2] * v_arr[0] - u_arr[0] * v_arr[2];
+        res[2] = u_arr[0] * v_arr[1] - u_arr[1] * v_arr[0];
+        Vector::from(res)
     }
 }
