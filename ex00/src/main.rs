@@ -4,6 +4,8 @@ use vector::{Vector, TVector3};
 pub mod matrix;
 use matrix::Matrix;
 
+use crate::matrix::TMatrix4;
+
 fn test_vector() {
     // let cameraPos = TVector3::from([0., 0., 0.]);
     // let cameraTarget = TVector3::from([0., 0., 0.]);
@@ -49,36 +51,49 @@ fn test_matrix() {
     let mut u = Matrix::from([
         [1., 2., 3.],
         [4., 5., 6.],
-        [7., 8., 9.]
     ]);
     let v = Matrix::from([
-        [7., 4.,],
-        [-2., 2.],
-        [-4., -2.]
+        [7., 8.,],
+        [9., 10.],
+        [11., 12.]
     ]);
-    let res = u * v;
-    println!("{}", res);
+    // v.out();
+    // let res = u * v;
+    // println!("{}", res);
     
     // [8.0, 6.0]
     // [1.0, 6.0]
 
     let mut u = Matrix::from([[1., 2.], [3., 4.]]);
     let v = Matrix::from([[7., 4.], [-2., 2.]]);
-    u.sub(&v);
+    // u.sub(&v);
+    // u.out();
     // println!("{}", u);
     // [-6.0, -2.0]
     // [5.0, 2.0]
 
     let mut u = Matrix::from([[1., 2.], [3., 4.]]);
-    u.scl(2.);
+    // u.scl(2.);
     // println!("{}", u);
+    // u.out();
     // [2.0, 4.0]
     // [6.0, 8.0]
 
+    let mut trans = TMatrix4::translation(10., 0., 0.);
+    let mut position = Matrix::from([
+        [0.],
+        [0.],
+        [0.],
+        [1.],
+    ]);
+    trans.out();
+    position.out();
+    let res = trans * position;
+    res.out();
 
 
 }
 
 fn main() {
-    test_vector();
+    test_matrix();
 }
