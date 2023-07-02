@@ -9,7 +9,7 @@ pub type TMatrix2<T> = TMatrix<T, 2, 2>;
 pub type TMatrix3<T> = TMatrix<T, 3, 3>;
 pub type TMatrix4<T> = TMatrix<T, 4, 4>;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Matrix<T, const M: usize, const N: usize> {
     data: Vec<Vec<T>>,
 }
@@ -118,12 +118,16 @@ pub fn identity_array() -> [[f32; 4]; 4] {
 }
 
 impl TMatrix4<f32> {
+    pub fn identity() -> TMatrix4<f32> {
+        let mut trans:[[f32; 4]; 4] = identity_array();
+        Matrix::from(trans)
+    }
+
     pub fn translation(x: f32, y: f32, z:f32) -> TMatrix4<f32> {
         let mut trans:[[f32; 4]; 4] = identity_array();
         trans[0][3] = x;
         trans[1][3] = y;
         trans[2][3] = z;
-        println!("trans{:?}", trans);
         Matrix::from(trans)
     }
 
@@ -133,6 +137,18 @@ impl TMatrix4<f32> {
         scale[1][1] = y;
         scale[2][2] = z;
         Matrix::from(scale)
+    }
+}
+
+impl TMatrix4<f32>{
+    pub fn as_mut_arr(&self) -> [[f32; 4]; 4] {
+        let iter = self.data.iter();
+        let mut res:[[f32; 4]; 4] = [[0.; 4]; 4];
+        for (i , row) in iter.enumerate() {
+            let slice = row.as_slice();
+            res[i] = slice.try_into().unwrap();
+        }
+        res
     }
 }
 
