@@ -8,7 +8,7 @@ pub type TVector2<T> = TVector<T, 2>;
 pub type TVector3<T> = TVector<T, 3>;
 pub type TVector4<T> = TVector<T, 4>;
 
-#[derive(Debug, Clone)]
+#[derive(PartialEq, Debug, Clone)]
 pub struct Vector<T, const R: usize> {
     data: Vec<T>,
 }
@@ -199,6 +199,19 @@ impl<T: Float, const N: usize> Vector<T, N> {
     }
 }
 
+impl<T: Float, const N: usize> Vector<T, N> {
+    pub fn linear_combination (u: &[Vector<T, N>], coefs: &[T]) -> Vector<T, N> {
+        let mut res = Vector::from([T::zero(); N]);
+        for (i, item) in u.iter().enumerate() {
+            let mut tmp = item.clone();
+            tmp.scl(coefs[i]);
+            res = res + tmp;
+        }
+        res
+
+    }
+}
+
 impl<T: Float> TVector3<T> {
     pub fn cross_product(u: &TVector3<T>, v: &TVector3<T>) -> TVector3<T> {
         let mut res = [T::zero(); 3];
@@ -210,3 +223,4 @@ impl<T: Float> TVector3<T> {
         Vector::from(res)
     }
 }
+
