@@ -76,12 +76,26 @@ impl<T: Clone + Add<Output = T>, const N: usize> Add<&Vector<T, N>> for &Vector<
     }
 }
 
-impl<T , const N: usize> Mul<Vector<T, N>> for Vector<T, N> {
+// impl<T , const N: usize> Mul<Vector<T, N>> for Vector<T, N> {
+//     type Output = Vector<T, N>;
+//     fn mul(self, rhs: Vector<T, N>) -> Vector<T, N> {
+//         self
+//     }
+// }
+
+impl<T: Clone + Mul<f32, Output = T>, const N: usize> Mul<f32> for Vector<T, N> {
     type Output = Vector<T, N>;
-    fn mul(self, rhs: Vector<T, N>) -> Vector<T, N> {
-        self
+    fn mul(self, rhs: f32) -> Vector<T, N> {
+        let mut res = Vec::new();
+        for i in 0..N {
+            res.push(self.data[i].clone() * rhs);
+        }
+        Vector {
+            data: res,
+        }
     }
 }
+
 impl<T: Sub<Output = T> + Clone, const N: usize> Vector<T, N> {
     pub fn sub(&mut self, v: &Vector<T, N>) {
         let it1 = self.data.iter();
@@ -105,7 +119,7 @@ impl<T: Default + Sub<Output = T> + Copy, const N: usize> Sub<Vector<T, N>> for 
         for i in 0..N {
             res[i] = l[i] - r[i];
         }
-        Vector::from(res)    
+        Vector::from(res)
     }
 }
 
@@ -118,7 +132,7 @@ impl<T: Default + Sub<Output = T> + Copy, const N: usize> Sub<&Vector<T, N>> for
         for i in 0..N {
             res[i] = l[i] - r[i];
         }
-        Vector::from(res)    
+        Vector::from(res)
     }
 }
 

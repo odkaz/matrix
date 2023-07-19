@@ -3,8 +3,15 @@ use vector::{Vector, TVector3};
 
 pub mod matrix;
 use matrix::Matrix;
+use std::ops::{Add, Mul, Sub, Index};
 
 use crate::matrix::TMatrix4;
+
+pub fn lerp<V: Clone + Add<Output = V> + Sub<Output = V> + Mul<f32, Output = V>>(u: V, v: V, t: f32) -> V {
+    let res = u.clone() + ((v - u) * t);
+    res
+}
+
 
 fn test_vector() {
     // let cameraPos = TVector3::from([0., 0., 0.]);
@@ -41,6 +48,8 @@ fn test_vector() {
 #[cfg(test)]
 mod tests {
     use crate::vector::Vector;
+    use crate::matrix::Matrix;
+    use crate::lerp;
 
     #[test]
     fn it_works() {
@@ -76,6 +85,17 @@ mod tests {
         assert_eq!(res2, ans2);
     }
 
+    #[test]
+    fn test_lerp() {
+        assert_eq!(lerp(0., 1., 0.), 0.0);
+        assert_eq!(lerp(0., 1., 1.), 1.0);
+        assert_eq!(lerp(0., 1., 0.5), 0.5);
+        assert_eq!(lerp(21., 42., 0.3), 27.3);
+        assert_eq!(lerp(Vector::from([2., 1.]), Vector::from([4., 2.]), 0.3), Vector::from([2.6, 1.3]));
+        assert_eq!(lerp(Matrix::from([[2., 1.], [3., 4.]]), Matrix::from([[20.,10.], [30., 40.]]), 0.5),
+                    Matrix::from([[11., 5.5], [16.5, 22.]]));
+    }
+
 
 }
 
@@ -92,7 +112,7 @@ fn test_matrix() {
     // v.out();
     // let res = u * v;
     // println!("{}", res);
-    
+
     // [8.0, 6.0]
     // [1.0, 6.0]
 

@@ -9,7 +9,7 @@ pub type TMatrix2<T> = TMatrix<T, 2, 2>;
 pub type TMatrix3<T> = TMatrix<T, 3, 3>;
 pub type TMatrix4<T> = TMatrix<T, 4, 4>;
 
-#[derive(Debug, Clone)]
+#[derive(PartialEq, Debug, Clone)]
 pub struct Matrix<T, const M: usize, const N: usize> {
     data: Vec<Vec<T>>,
 }
@@ -52,6 +52,25 @@ impl<T: Display + Add<Output = T> + Clone, const M: usize, const N: usize> Matri
     }
 }
 
+impl<T: Display + Add<Output = T> + Clone, const M: usize, const N: usize> Add<Matrix<T, M, N>> for Matrix<T, M, N> {
+    type Output = Matrix<T, M, N>;
+    fn add(self, v: Matrix<T, M, N>) -> Matrix<T, M, N> {
+        let mut res = Vec::new();
+        for j in 0..M {
+            let it1 = self.data[j].iter();
+            let it2 = v.data[j].iter();
+            let iter = it1.zip(it2);
+            let mut v = Vec::new();
+            for (item1, item2) in iter {
+                let value = item1.clone() + item2.clone();
+                v.push(value);
+            }
+            res.push(v);
+        }
+        Matrix::from(res)
+    }
+}
+
 impl<T: Display + Sub<Output = T> + Clone, const M: usize, const N: usize> Matrix<T, M, N> {
     pub fn sub(&mut self, v: &Matrix<T, M, N>) {
         let mut res = Vec::new();
@@ -67,6 +86,25 @@ impl<T: Display + Sub<Output = T> + Clone, const M: usize, const N: usize> Matri
             res.push(v);
         }
         self.data = res;
+    }
+}
+
+impl<T: Display + Sub<Output = T> + Clone, const M: usize, const N: usize> Sub<Matrix<T, M, N>> for Matrix<T, M, N> {
+    type Output = Matrix<T, M, N>;
+    fn sub(self, v: Matrix<T, M, N>) -> Matrix<T, M, N> {
+        let mut res = Vec::new();
+        for j in 0..M {
+            let it1 = self.data[j].iter();
+            let it2 = v.data[j].iter();
+            let iter = it1.zip(it2);
+            let mut v = Vec::new();
+            for (item1, item2) in iter {
+                let value = item1.clone() - item2.clone();
+                v.push(value);
+            }
+            res.push(v);
+        }
+        Matrix::from(res);
     }
 }
 
@@ -97,6 +135,25 @@ impl<T, const M: usize, const N: usize, const H: usize> Mul<Matrix<T, N, H>> for
                 for k in 0..N {
                     sum = sum + (self.data[j][k] * rhs.data[k][i]);
                 }
+                v.push(sum);
+            }
+            res.push(v);
+        }
+        Matrix {
+            data: res,
+        }
+    }
+}
+
+impl<T, const M: usize, const N: usize> Mul<f32> for Matrix<T, M, N>
+    where T: Default + Add<Output = T> + Mul<f32, Output = T> + Copy {
+    type Output = Matrix<T, M, N>;
+     fn mul(self, rhs: f32) -> Matrix<T, M, N>{
+        let mut res = Vec::new();
+        for j in 0..M {
+            let mut v = Vec::new();
+            for i in 0..N {
+                let sum = self.data[j][i] * rhs;
                 v.push(sum);
             }
             res.push(v);
