@@ -19,6 +19,16 @@ pub fn angle_cos<T: Float + Display + Default + Into<f32> + Add<f32, Output = f3
     res
 }
 
+pub fn cross_product<T: Float>(u: &TVector3<T>, v: &TVector3<T>) -> TVector3<T> {
+    let mut res = [T::zero(); 3];
+    let u_arr = u.as_slice();
+    let v_arr = v.as_slice();
+    res[0] = u_arr[1] * v_arr[2] - u_arr[2] * v_arr[1];
+    res[1] = u_arr[2] * v_arr[0] - u_arr[0] * v_arr[2];
+    res[2] = u_arr[0] * v_arr[1] - u_arr[1] * v_arr[0];
+    Vector::from(res)
+}
+
 fn test_vector() {
     // let cameraPos = TVector3::from([0., 0., 0.]);
     // let cameraTarget = TVector3::from([0., 0., 0.]);
@@ -57,6 +67,7 @@ mod tests {
     use crate::matrix::Matrix;
     use crate::lerp;
     use crate::angle_cos;
+    use crate::cross_product;
 
     #[test]
     fn test01() {
@@ -137,6 +148,33 @@ mod tests {
         let u = Vector::from([1., 2., 3.]);
         let v = Vector::from([4., 5., 6.]);
         assert_eq!(angle_cos(&u, &v), 0.9746318);
+    }
+
+    #[test]
+    fn test_cross() {
+        let u = Vector::from([0., 0., 1.]);
+        let v = Vector::from([1., 0., 0.]);
+        println!("{}", cross_product(&u, &v));
+        assert_eq!(cross_product(&u, &v), Vector::from([0., 1., 0.]));
+        // [0.]
+        // [1.]
+        // [0.]
+        let u = Vector::from([1., 2., 3.]);
+        let v = Vector::from([4., 5., 6.]);
+        println!("{}", cross_product(&u, &v));
+        assert_eq!(cross_product(&u, &v), Vector::from([-3., 6., -3.]));
+
+        // [-3.]
+        // [6.]
+        // [-3.]
+        let u = Vector::from([4., 2., -3.]);
+        let v = Vector::from([-2., -5., 16.]);
+        println!("{}", cross_product(&u, &v));
+        assert_eq!(cross_product(&u, &v), Vector::from([17., -58., -16.]));
+
+        // [17.]
+        // [-58.]
+        // [-16.]
     }
 }
 

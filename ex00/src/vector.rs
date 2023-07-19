@@ -254,15 +254,15 @@ impl<T: Float, const N: usize> Vector<T, N> {
     }
 }
 
-impl<T: Float> TVector3<T> {
-    pub fn cross_product(u: &TVector3<T>, v: &TVector3<T>) -> TVector3<T> {
-        let mut res = [T::zero(); 3];
-        let u_arr = u.as_slice();
-        let v_arr = v.as_slice();
-        res[0] = u_arr[1] * v_arr[2] - u_arr[2] * v_arr[1];
-        res[1] = u_arr[2] * v_arr[0] - u_arr[0] * v_arr[2];
-        res[2] = u_arr[0] * v_arr[1] - u_arr[1] * v_arr[0];
-        Vector::from(res)
-    }
-}
+// impl<T: Float> TVector3<T> {
+//     pub fn cross_product(u: &TVector3<T>, v: &TVector3<T>) -> TVector3<T> {
+//         let mut res = [T::zero(); 3];
+//         let u_arr = u.as_slice();
+//         let v_arr = v.as_slice();
+//         res[0] = u_arr[1] * v_arr[2] - u_arr[2] * v_arr[1];
+//         res[1] = u_arr[2] * v_arr[0] - u_arr[0] * v_arr[2];
+//         res[2] = u_arr[0] * v_arr[1] - u_arr[1] * v_arr[0];
+//         Vector::from(res)
+//     }
+// }
 
