@@ -161,12 +161,15 @@ impl<T: Display, const N: usize> Display for Vector<T, N> {
     }
 }
 
-// impl<T: Display + Default> Vector::<T> {
-//     fn dot::<T>(&self, v: Vector::<T>) -> T {
-//         let x: T = Default::default;
-//         println!("{}", x);
-//     }
-// }
+impl<T: Display + Default + Clone + Add<T, Output = T> + Mul<T, Output = T>, const N: usize> Vector<T, N> {
+    pub fn dot(&self, v: Vector<T, N>) -> T {
+        let mut res = T::default();
+        for (item1, item2) in self.data.iter().zip(v.data.iter()) {
+            res = res + item1.clone() * item2.clone();
+        }
+        res
+    }
+}
 
 
 
