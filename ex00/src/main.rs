@@ -156,25 +156,81 @@ mod tests {
         let v = Vector::from([1., 0., 0.]);
         println!("{}", cross_product(&u, &v));
         assert_eq!(cross_product(&u, &v), Vector::from([0., 1., 0.]));
-        // [0.]
-        // [1.]
-        // [0.]
+        
         let u = Vector::from([1., 2., 3.]);
         let v = Vector::from([4., 5., 6.]);
         println!("{}", cross_product(&u, &v));
         assert_eq!(cross_product(&u, &v), Vector::from([-3., 6., -3.]));
 
-        // [-3.]
-        // [6.]
-        // [-3.]
         let u = Vector::from([4., 2., -3.]);
         let v = Vector::from([-2., -5., 16.]);
         println!("{}", cross_product(&u, &v));
         assert_eq!(cross_product(&u, &v), Vector::from([17., -58., -16.]));
+    }
 
-        // [17.]
-        // [-58.]
-        // [-16.]
+    #[test]
+    fn test_mul() {
+        let mut u = Matrix::from([
+        [1., 0.],
+        [0., 1.],
+        ]);
+        let v = Vector::from([4., 2.]);
+        assert_eq!(u.mul_vec(&v), Vector::from([4., 2.]));
+        // [4.]
+        // [2.]
+        let mut u = Matrix::from([
+        [2., 0.],
+        [0., 2.],
+        ]);
+        let v = Vector::from([4., 2.]);
+        assert_eq!(u.mul_vec(&v), Vector::from([8., 4.]));
+        // [8.]
+        // [4.]
+        let mut u = Matrix::from([
+        [2., -2.],
+        [-2., 2.],
+        ]);
+        let v = Vector::from([4., 2.]);
+        assert_eq!(u.mul_vec(&v), Vector::from([4., -4.]));
+
+        // [4.]
+        // [-4.]
+        let mut u = Matrix::from([
+        [1., 0.],
+        [0., 1.],
+        ]);
+        let v = Matrix::from([
+        [1., 0.],
+        [0., 1.],
+        ]);
+        assert_eq!(u.mul_mat(&v), Matrix::from([[1., 0.], [0., 1.]]));
+
+        // [1., 0.]
+        // [0., 1.]
+        let mut u = Matrix::from([
+        [1., 0.],
+        [0., 1.],
+        ]);
+        let v = Matrix::from([
+        [2., 1.],
+        [4., 2.],
+        ]);
+        assert_eq!(u.mul_mat(&v), Matrix::from([[2., 1.], [4., 2.]]));
+
+        // [2., 1.]
+        // [4., 2.]
+        let mut u = Matrix::from([
+        [3., -5.],
+        [6., 8.],
+        ]);
+        let v = Matrix::from([
+        [2., 1.],
+        [4., 2.],
+        ]);
+        assert_eq!(u.mul_mat(&v), Matrix::from([[-14., -7.], [44., 22.]]));
+
+        // [-14., -7.]
+        // [44., 22.]
     }
 }
 

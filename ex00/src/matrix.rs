@@ -3,6 +3,8 @@ use std::f32::consts::PI;
 use std::fmt::Display;
 use std::ops::{Add, Mul, Sub};
 use std::default::Default;
+use num::{Float};
+use crate::vector::Vector;
 
 pub type TMatrix<T, const M: usize, const N: usize> = Matrix<T, M, N>;
 pub type TMatrix2<T> = TMatrix<T, 2, 2>;
@@ -124,6 +126,39 @@ impl<T: Display + Mul<Output = T> + Clone + Copy, const M: usize, const N: usize
             res.push(v);
         }
         self.data = res;
+    }
+}
+
+impl<T, const M: usize, const N: usize> Matrix<T, M, N>
+    where T: Default + Float + Copy {
+    pub fn mul_mat<const H: usize>(&mut self, rhs: &Matrix<T, N, H>) -> Matrix<T, M, H>{
+        let mut res = Vec::new();
+        for j in 0..M {
+            let mut v = Vec::new();
+            for i in 0..H {
+                let mut sum: T = Default::default();
+                for k in 0..N {
+                    sum = sum + (self.data[j][k] * rhs.data[k][i]);
+                }
+                v.push(sum);
+            }
+            res.push(v);
+        }
+        Matrix {
+            data: res,
+        }
+    }
+
+    pub fn mul_vec(&mut self, rhs: &Vector<T, N>) -> Vector<T, N> {
+        let mut res = [T::default(); N];
+        for j in 0..M {
+            let mut sum: T = Default::default();
+            for i in 0..N {
+                sum = sum + (self.data[j][i] * rhs[i]);
+            }
+            res[j] = sum;
+        }
+        Vector::from(res)
     }
 }
 
