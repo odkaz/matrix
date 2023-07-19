@@ -1,5 +1,6 @@
 use std::fmt::Display;
 use std::ops::{Add, Mul, Sub, Index};
+use std::cmp::PartialOrd;
 extern crate num;
 
 use num::{Float};
@@ -162,12 +163,36 @@ impl<T: Display, const N: usize> Display for Vector<T, N> {
 }
 
 impl<T: Display + Default + Clone + Add<T, Output = T> + Mul<T, Output = T>, const N: usize> Vector<T, N> {
-    pub fn dot(&self, v: Vector<T, N>) -> T {
+    pub fn dot(&self, v: &Vector<T, N>) -> T {
         let mut res = T::default();
         for (item1, item2) in self.data.iter().zip(v.data.iter()) {
             res = res + item1.clone() * item2.clone();
         }
         res
+    }
+}
+
+impl<T: Float + Into<f32> + Clone + Add<f32, Output = f32>, const N: usize> Vector<T, N> {
+    pub fn norm_1(&mut self) -> f32 {
+        let mut res = f32::default();
+        for i in self.data.iter() {
+            res = i.clone().abs() + res;
+        }
+        res
+    }
+
+    pub fn norm(&mut self) -> f32 {
+        let mut res = f32::default();
+        for i in self.data.iter() {
+            res = i.clone().powi(2) + res;
+        }
+        f32::sqrt(res)
+    }
+
+    pub fn norm_inf(&mut self) -> f32 {
+        let max = self.data.iter().max_by(|x, y| x.abs().partial_cmp(&y.abs()).unwrap()).unwrap();
+        let cast: f32 = max.clone().abs().into();
+        cast
     }
 }
 

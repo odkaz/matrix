@@ -3,14 +3,18 @@ use vector::{Vector, TVector3};
 
 pub mod matrix;
 use matrix::Matrix;
-use std::ops::{Add, Mul, Sub, Index};
-
+use std::{ops::{Add, Mul, Sub, Index}, fmt::Display};
+use num::{Float};
 use crate::matrix::TMatrix4;
 
 pub fn lerp<V: Clone + Add<Output = V> + Sub<Output = V> + Mul<f32, Output = V>>(u: V, v: V, t: f32) -> V {
     let res = u.clone() + ((v - u) * t);
     res
 }
+
+// pub fn angle_cos<T: Float + Display + Default, const N: usize>(u: &Vector<T, N>, v: &Vector<T, N>) -> f32 {
+//     let num = u.dot(v);
+// }
 
 
 fn test_vector() {
@@ -81,15 +85,31 @@ mod tests {
     fn test_dot() {
         let u = Vector::from([0., 0.]);
         let v = Vector::from([1., 1.]);
-        assert_eq!(u.dot(v), 0.0);
+        assert_eq!(u.dot(&v), 0.0);
 
         let u = Vector::from([1., 1.]);
         let v = Vector::from([1., 1.]);
-        assert_eq!(u.dot(v), 2.0);
+        assert_eq!(u.dot(&v), 2.0);
 
         let u = Vector::from([-1., 6.]);
         let v = Vector::from([3., 2.]);
-        assert_eq!(u.dot(v), 9.0);
+        assert_eq!(u.dot(&v), 9.0);
+    }
+
+    #[test]
+    fn test_norm() {
+        let mut u = Vector::from([0., 0., 0.]);
+        assert_eq!(u.norm_1(), 0.0);
+        assert_eq!(u.norm(), 0.0);
+        assert_eq!(u.norm_inf(), 0.0);
+        let mut u = Vector::from([1., 2., 3.]);
+        assert_eq!(u.norm_1(), 6.0);
+        assert_eq!(u.norm(), f32::sqrt(14.0));
+        assert_eq!(u.norm_inf(), 3.0);
+        let mut u = Vector::from([-1., -2.]);
+        assert_eq!(u.norm_1(), 3.0);
+        assert_eq!(u.norm(), f32::sqrt(5.0));
+        assert_eq!(u.norm_inf(), 2.0);
     }
 }
 
