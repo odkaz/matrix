@@ -3,7 +3,7 @@ use vector::{Vector, TVector3};
 
 pub mod matrix;
 use matrix::Matrix;
-use std::{ops::{Add, Mul, Sub, Index}, fmt::Display};
+use std::{ops::{Add, Mul, Sub, Div, Index}, fmt::Display};
 use num::{Float};
 use crate::matrix::TMatrix4;
 
@@ -12,10 +12,12 @@ pub fn lerp<V: Clone + Add<Output = V> + Sub<Output = V> + Mul<f32, Output = V>>
     res
 }
 
-// pub fn angle_cos<T: Float + Display + Default, const N: usize>(u: &Vector<T, N>, v: &Vector<T, N>) -> f32 {
-//     let num = u.dot(v);
-// }
-
+pub fn angle_cos<T: Float + Display + Default + Into<f32> + Add<f32, Output = f32> + Div<f32, Output = f32>, const N: usize>(u: &Vector<T, N>, v: &Vector<T, N>) -> f32 {
+    let num = u.dot(v);
+    let den = u.clone().norm() * v.clone().norm();
+    let res = num / den;
+    res
+}
 
 fn test_vector() {
     // let cameraPos = TVector3::from([0., 0., 0.]);
@@ -54,6 +56,7 @@ mod tests {
     use crate::vector::Vector;
     use crate::matrix::Matrix;
     use crate::lerp;
+    use crate::angle_cos;
 
     #[test]
     fn test01() {
@@ -110,6 +113,30 @@ mod tests {
         assert_eq!(u.norm_1(), 3.0);
         assert_eq!(u.norm(), f32::sqrt(5.0));
         assert_eq!(u.norm_inf(), 2.0);
+    }
+
+    #[test]
+    fn test_cos() {
+        let u = Vector::from([1., 0.]);
+        let v = Vector::from([1., 0.]);
+        assert_eq!(angle_cos(&u, &v), 1.0);
+
+        let u = Vector::from([1., 0.]);
+        let v = Vector::from([0., 1.]);
+        assert_eq!(angle_cos(&u, &v), 0.0);
+
+        // let u = Vector::from([-1., 1.]);
+        // let v = Vector::from([ 1., -1.]);
+        // assert_eq!(angle_cos(&u, &v), -1.0);
+        // float error?
+
+        let u = Vector::from([2., 1.]);
+        let v = Vector::from([4., 2.]);
+        assert_eq!(angle_cos(&u, &v), 1.0);
+
+        let u = Vector::from([1., 2., 3.]);
+        let v = Vector::from([4., 5., 6.]);
+        assert_eq!(angle_cos(&u, &v), 0.9746318);
     }
 }
 

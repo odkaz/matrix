@@ -172,7 +172,7 @@ impl<T: Display + Default + Clone + Add<T, Output = T> + Mul<T, Output = T>, con
     }
 }
 
-impl<T: Float + Into<f32> + Clone + Add<f32, Output = f32>, const N: usize> Vector<T, N> {
+impl<T: Float + Into<f32> + Add<f32, Output = f32>, const N: usize> Vector<T, N> {
     pub fn norm_1(&mut self) -> f32 {
         let mut res = f32::default();
         for i in self.data.iter() {
