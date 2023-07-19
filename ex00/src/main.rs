@@ -52,25 +52,6 @@ mod tests {
     use crate::lerp;
 
     #[test]
-    fn it_works() {
-        let result = 2 + 2;
-        assert_eq!(result, 4);
-    }
-
-    #[test]
-    fn second() {
-        let result = 2 + 2;
-        assert_eq!(result, 3);
-    }
-
-    #[test]
-    fn vec_test() {
-        let v1 = Vector::from([1.0, 2.0, 3.0]);
-        let v2 = Vector::from([1.0, 1.0, 3.0]);
-        assert_eq!(v1, v2);
-    }
-
-    #[test]
     fn test01() {
         let e1 = Vector::from([1., 0., 0.]);
         let e2 = Vector::from([0., 1., 0.]);
@@ -95,8 +76,6 @@ mod tests {
         assert_eq!(lerp(Matrix::from([[2., 1.], [3., 4.]]), Matrix::from([[20.,10.], [30., 40.]]), 0.5),
                     Matrix::from([[11., 5.5], [16.5, 22.]]));
     }
-
-
 }
 
 fn test_matrix() {

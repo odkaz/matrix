@@ -67,7 +67,9 @@ impl<T: Display + Add<Output = T> + Clone, const M: usize, const N: usize> Add<M
             }
             res.push(v);
         }
-        Matrix::from(res)
+        Matrix {
+            data: res,
+        }
     }
 }
 
@@ -104,7 +106,9 @@ impl<T: Display + Sub<Output = T> + Clone, const M: usize, const N: usize> Sub<M
             }
             res.push(v);
         }
-        Matrix::from(res);
+        Matrix {
+            data: res,
+        }
     }
 }
 
