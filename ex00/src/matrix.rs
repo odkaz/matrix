@@ -213,6 +213,23 @@ impl<T: Float, const N: usize> Matrix<T, N, N> {
     }
 }
 
+impl<T: Float, const M: usize, const N: usize> Matrix<T, M, N>
+{
+    pub fn transpose(&mut self) -> Matrix<T, N, M> {
+        let mut res = Vec::new();
+        for j in 0..N {
+            let mut v = Vec::new();
+            for i in 0..M {
+                v.push(self.data[i][j]);
+            }
+            res.push(v);
+        }
+        Matrix {
+            data: res,
+        }
+    }
+}
+
 
 
 

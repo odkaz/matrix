@@ -245,6 +245,29 @@ mod tests {
         assert_eq!(u.trace(), -21.);
         // -21.0
     }
+
+    #[test]
+    fn test_transpose() {
+        let mut u = Matrix::from([
+            [1., 2.],
+            [3., 4.],
+            [5., 6.],
+            ]);
+        assert_eq!(u.transpose(), Matrix::from([
+            [1., 3., 5.],
+            [2., 4., 6.],
+        ]));
+
+        let mut u = Matrix::from([
+            [1.],
+            [2.],
+            [3.],
+            [4.],
+            ]);
+        assert_eq!(u.transpose(), Matrix::from([
+            [1., 2., 3., 4.],
+        ]));
+    }
 }
 
 fn test_matrix() {
