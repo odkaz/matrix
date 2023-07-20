@@ -203,6 +203,18 @@ impl<T, const M: usize, const N: usize> Mul<f32> for Matrix<T, M, N>
     }
 }
 
+impl<T: Float, const N: usize> Matrix<T, N, N> {
+    pub fn trace(&mut self) -> T {
+        let mut res = T::zero();
+        for i in 0..N {
+            res = res + self.data[i][i];
+        }
+        res
+    }
+}
+
+
+
 
 pub fn identity_array() -> [[f32; 4]; 4] {
     let mut trans:[[f32; 4]; 4] = [[0.; 4]; 4];

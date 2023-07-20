@@ -176,16 +176,14 @@ mod tests {
         ]);
         let v = Vector::from([4., 2.]);
         assert_eq!(u.mul_vec(&v), Vector::from([4., 2.]));
-        // [4.]
-        // [2.]
+
         let mut u = Matrix::from([
         [2., 0.],
         [0., 2.],
         ]);
         let v = Vector::from([4., 2.]);
         assert_eq!(u.mul_vec(&v), Vector::from([8., 4.]));
-        // [8.]
-        // [4.]
+
         let mut u = Matrix::from([
         [2., -2.],
         [-2., 2.],
@@ -193,8 +191,6 @@ mod tests {
         let v = Vector::from([4., 2.]);
         assert_eq!(u.mul_vec(&v), Vector::from([4., -4.]));
 
-        // [4.]
-        // [-4.]
         let mut u = Matrix::from([
         [1., 0.],
         [0., 1.],
@@ -205,8 +201,6 @@ mod tests {
         ]);
         assert_eq!(u.mul_mat(&v), Matrix::from([[1., 0.], [0., 1.]]));
 
-        // [1., 0.]
-        // [0., 1.]
         let mut u = Matrix::from([
         [1., 0.],
         [0., 1.],
@@ -217,8 +211,6 @@ mod tests {
         ]);
         assert_eq!(u.mul_mat(&v), Matrix::from([[2., 1.], [4., 2.]]));
 
-        // [2., 1.]
-        // [4., 2.]
         let mut u = Matrix::from([
         [3., -5.],
         [6., 8.],
@@ -228,9 +220,30 @@ mod tests {
         [4., 2.],
         ]);
         assert_eq!(u.mul_mat(&v), Matrix::from([[-14., -7.], [44., 22.]]));
+    }
 
-        // [-14., -7.]
-        // [44., 22.]
+    #[test]
+    fn test_trace() {
+        let mut u = Matrix::from([
+        [1., 0.],
+        [0., 1.],
+        ]);
+        assert_eq!(u.trace(), 2.);
+        // 2.0
+        let mut u = Matrix::from([
+        [2., -5., 0.],
+        [4., 3., 7.],
+        [-2., 3., 4.],
+        ]);
+        assert_eq!(u.trace(), 9.);
+        // 9.0
+        let mut u = Matrix::from([
+        [-2., -8., 4.],
+        [1., -23., 4.],
+        [0., 6., 4.],
+        ]);
+        assert_eq!(u.trace(), -21.);
+        // -21.0
     }
 }
 
