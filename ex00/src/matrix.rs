@@ -6,6 +6,8 @@ use std::default::Default;
 use num::{Float};
 use crate::vector::Vector;
 
+use std::convert::TryInto;
+
 pub type TMatrix<T, const M: usize, const N: usize> = Matrix<T, M, N>;
 pub type TMatrix2<T> = TMatrix<T, 2, 2>;
 pub type TMatrix3<T> = TMatrix<T, 3, 3>;
@@ -227,6 +229,44 @@ impl<T: Float, const M: usize, const N: usize> Matrix<T, M, N>
         Matrix {
             data: res,
         }
+    }
+}
+
+impl<T: Float + Clone, const M: usize, const N: usize> Matrix<T, M, N> {
+    pub fn row_echelon(&mut self) -> Matrix<T, M, N> {
+        let mut res = Vec::new();
+        for j in 0..M {
+            let mut v = self.as_vector(j);
+            for i in 0..N {
+                if i < j {
+                    //perform zero
+                } else {
+                    //divide to one
+                    v = v * v[i];
+                }
+            }
+        }
+        Matrix {
+            data: res,
+        }
+    }
+}
+
+
+
+fn vec_to_arr<T, const N: usize>(v: Vec<T>) -> [T; N] {
+    v.try_into()
+        .unwrap_or_else(|v: Vec<T>| panic!("Expected a Vec of length {} but it was {}", N, v.len()))
+}
+
+impl<T: Float, const M: usize, const N: usize> Matrix<T, M, N> {
+    pub fn as_vector(&self, h: usize) -> Vector<T, N> {
+        let arr = vec_to_arr(self.data[h].clone());
+        // let mut arr = [T::zero(); N];
+        // for i in 0..N {
+        //     arr[i] = self.data[h][i];
+        // }
+        Vector::from(arr)
     }
 }
 
