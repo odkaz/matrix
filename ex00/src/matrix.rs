@@ -233,21 +233,60 @@ impl<T: Float, const M: usize, const N: usize> Matrix<T, M, N>
 }
 
 impl<T: Float + Clone, const M: usize, const N: usize> Matrix<T, M, N> {
+    pub fn as_arr(&mut self) -> [[T; N]; M] {
+        let mut res = [[T::zero(); N]; M];
+        for j in 0..M {
+            for i in 0..N {
+                res[j][i] = self.data[j][i];
+            }
+        }
+        res
+    }
+}
+
+impl<T: Float + Clone + std::fmt::Display, const M: usize, const N: usize> Matrix<T, M, N> {
+    fn is_all_zero(&self, v: Vector<T, N>) -> bool {
+        for item in v.as_vec() {
+            if item != T::zero() {
+                return false
+            }
+        }
+        true
+    }
+
     pub fn row_echelon(&mut self) -> Matrix<T, M, N> {
-        let mut res = Vec::new();
+        let mut lead: usize = 0;
         for j in 0..M {
             let mut v = self.as_vector(j);
+            if self.is_all_zero(v.clone()) {
+                self.data[M - 1] = v.as_vec();
+            }
             for i in 0..N {
-                if i < j {
-                    //perform zero
-                } else {
-                    //divide to one
-                    v = v * v[i];
+                //find the lead
+                if self.data[j][i] != T::zero() && i >= lead {
+                    //lead to 1
+                    v = v.clone() / v[i];
+                    self.data[j] = v.as_vec();
+
+                    //pivot column to 0
+                    for x in 0..M {
+                        if x == j {
+                            continue;
+                        }
+                        let coef = self.data[x][i];
+                        if coef != T::zero() {
+                            let mut tmp = self.as_vector(x);
+                            tmp = tmp.clone() - v.clone() * coef;
+                            self.data[x] = tmp.as_vec();
+                        }
+                    }
+                    lead = i;
+                    break;
                 }
             }
         }
         Matrix {
-            data: res,
+            data: self.data.clone(),
         }
     }
 }

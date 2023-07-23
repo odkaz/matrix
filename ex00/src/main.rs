@@ -29,38 +29,6 @@ pub fn cross_product<T: Float>(u: &TVector3<T>, v: &TVector3<T>) -> TVector3<T> 
     Vector::from(res)
 }
 
-fn test_vector() {
-    // let cameraPos = TVector3::from([0., 0., 0.]);
-    // let cameraTarget = TVector3::from([0., 0., 0.]);
-    // let cameraDirection = TVector3::normalize(cameraPos - cameraTarget);
-
-    let mut u = Vector::from([2., 3., 4.]);
-    let v = Vector::from([5., 6., 7.]);
-
-    // let mut r = u - v;
-    // println!("{}{}{}", &u[0], &u[1], &u[3]);
-    // r.out();
-    // u.add(&v);
-    // let mut r = Vector::cross_product(&u, &v);
-    // println!("{}", u.normalize());
-    // r.out();
-    // u.out();
-    // [7.0]
-    // [10.0]
-    let mut u = Vector::from([2., 3.]);
-    let v = Vector::from([5., 7.]);
-    let mut res = u + v;
-    res.out();
-    // [-3.0]
-    // [-4.0]
-    let mut u = Vector::from([2., 3.]);
-    u.scl(2.);
-    u.out();
-    // [4.0]
-    // [6.0]
-
-}
-
 #[cfg(test)]
 mod tests {
     use crate::vector::Vector;
@@ -268,53 +236,57 @@ mod tests {
             [1., 2., 3., 4.],
         ]));
     }
+
+    #[test]
+    fn test_row_echelon() {
+        let mut u = Matrix::from([
+            [1., 0., 0.],
+            [0., 1., 0.],
+            [0., 0., 1.],
+        ]);
+        assert_eq!(u.row_echelon(), Matrix::from([
+            [1., 0., 0.],
+            [0., 1., 0.],
+            [0., 0., 1.],
+        ]));
+
+        let mut u = Matrix::from([
+            [1., 2.],
+            [3., 4.],
+        ]);
+        assert_eq!(u.row_echelon(), Matrix::from([
+            [1.0, 0.0],
+            [0.0, 1.0],
+        ]));
+
+        let mut u = Matrix::from([
+            [1., 2.],
+            [2., 4.],
+        ]);
+        assert_eq!(u.row_echelon(), Matrix::from([
+            [1.0, 2.0],
+            [0.0, 0.0],
+        ]));
+
+        let mut u = Matrix::from([
+        [8., 5., -2., 4., 28.],
+        [4., 2.5, 20., 4., -4.],
+        [8., 5., 1., 4., 17.],
+        ]);
+        assert_eq!(u.row_echelon(), Matrix::from([
+            [1.0, 0.625, 0.0, 0.0, -12.166666666666668],
+            [0.0, 0.0, 1.0, 0.0, -3.666666666666667],
+            [0.0, 0.0, 0.0, 1.0, 29.500000000000004 ],
+        ]));
+    }
 }
 
 fn test_matrix() {
     let mut u = Matrix::from([
-        [1., 2., 3.],
-        [4., 5., 6.],
+        [1., 2.],
+        [3., 4.],
     ]);
-    let v = Matrix::from([
-        [7., 8.,],
-        [9., 10.],
-        [11., 12.]
-    ]);
-    // v.out();
-    // let res = u * v;
-    // println!("{}", res);
-
-    // [8.0, 6.0]
-    // [1.0, 6.0]
-
-    let mut u = Matrix::from([[1., 2.], [3., 4.]]);
-    let v = Matrix::from([[7., 4.], [-2., 2.]]);
-    // u.sub(&v);
-    // u.out();
-    // println!("{}", u);
-    // [-6.0, -2.0]
-    // [5.0, 2.0]
-
-    let mut u = Matrix::from([[1., 2.], [3., 4.]]);
-    // u.scl(2.);
-    // println!("{}", u);
-    // u.out();
-    // [2.0, 4.0]
-    // [6.0, 8.0]
-
-    let mut trans = TMatrix4::translation(10., 0., 0.);
-    let mut position = Matrix::from([
-        [0.],
-        [0.],
-        [0.],
-        [1.],
-    ]);
-    trans.out();
-    position.out();
-    let res = trans * position;
-    res.out();
-
-
+    println!("{}", u.row_echelon());
 }
 
 fn main() {
