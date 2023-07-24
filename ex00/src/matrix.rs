@@ -3,15 +3,16 @@ use std::f32::consts::PI;
 use std::fmt::Display;
 use std::ops::{Add, Mul, Sub};
 use std::default::Default;
+use std::fmt::Debug;
 use num::{Float};
 use crate::vector::Vector;
 
 use std::convert::TryInto;
 
-pub type TMatrix<T, const M: usize, const N: usize> = Matrix<T, M, N>;
-pub type TMatrix2<T> = TMatrix<T, 2, 2>;
-pub type TMatrix3<T> = TMatrix<T, 3, 3>;
-pub type TMatrix4<T> = TMatrix<T, 4, 4>;
+pub type TMatrix<T, const M: usize> = Matrix<T, M, M>;
+pub type TMatrix2<T> = TMatrix<T, 2>;
+pub type TMatrix3<T> = TMatrix<T, 3>;
+pub type TMatrix4<T> = TMatrix<T, 4>;
 
 #[derive(PartialEq, Debug, Clone)]
 pub struct Matrix<T, const M: usize, const N: usize> {
@@ -244,7 +245,7 @@ impl<T: Float + Clone, const M: usize, const N: usize> Matrix<T, M, N> {
     }
 }
 
-impl<T: Float + Clone + std::fmt::Display, const M: usize, const N: usize> Matrix<T, M, N> {
+impl<T: Float + Clone, const M: usize, const N: usize> Matrix<T, M, N> {
     fn is_all_zero(&self, v: Vector<T, N>) -> bool {
         for item in v.as_vec() {
             if item != T::zero() {
@@ -306,6 +307,71 @@ impl<T: Float, const M: usize, const N: usize> Matrix<T, M, N> {
         //     arr[i] = self.data[h][i];
         // }
         Vector::from(arr)
+    }
+}
+
+impl<T: Float> TMatrix2<T> {
+    pub fn determinant(&mut self) -> T {
+        let a = self.data[0][0];
+        let b = self.data[0][1];
+        let c = self.data[1][0];
+        let d = self.data[1][1];
+        (a * d) - (b * c)
+    }
+}
+
+impl<T: Float + Display> TMatrix3<T> {
+    pub fn determinant(&mut self) -> T {
+        let mut res = T::zero();
+        for i in 0..3 {
+            let coef = self.data[0][i];
+            let mut sign = T::one();
+            if i % 2 == 1 {
+                sign = -T::one();
+            }
+            let mut ord = Vec::new();
+            for o in 0..3 {
+                if o != i {
+                    ord.push(o);
+                }
+            }
+            let arr = [
+                [self.data[1][ord[0]], self.data[1][ord[1]]],
+                [self.data[2][ord[0]], self.data[2][ord[1]]],
+            ];
+            let mut m = Matrix::from(arr);
+            let rhs = coef * sign * m.determinant();
+            res = res + rhs;
+        }
+        res
+    }
+}
+
+impl<T: Float + Display> TMatrix4<T> {
+    pub fn determinant(&mut self) -> T {
+        let mut res = T::zero();
+        for i in 0..4 {
+            let coef = self.data[0][i];
+            let mut sign = T::one();
+            if i % 2 == 1 {
+                sign = -T::one();
+            }
+            let mut ord = Vec::new();
+            for o in 0..4 {
+                if o != i {
+                    ord.push(o);
+                }
+            }
+            let arr = [
+                [self.data[1][ord[0]], self.data[1][ord[1]], self.data[1][ord[2]]],
+                [self.data[2][ord[0]], self.data[2][ord[1]], self.data[2][ord[2]]],
+                [self.data[3][ord[0]], self.data[3][ord[1]], self.data[3][ord[2]]],
+            ];
+            let mut m = Matrix::from(arr);
+            let rhs = coef * sign * m.determinant();
+            res = res + rhs;
+        }
+        res
     }
 }
 

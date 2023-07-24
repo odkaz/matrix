@@ -279,6 +279,44 @@ mod tests {
             [0.0, 0.0, 0.0, 1.0, 29.500000000000004 ],
         ]));
     }
+
+    #[test]
+    fn test_determinant() {
+        let mut u = Matrix::from([
+            [ 1., -1.],
+            [-1., 1.],
+        ]);
+        assert_eq!(u.determinant(), 0.0);
+
+        let mut u = Matrix::from([
+            [2., 0., 0.],
+            [0., 2., 0.],
+            [0., 0., 2.],
+        ]);
+        assert_eq!(u.determinant(), 8.0);
+
+        let mut u = Matrix::from([
+            [8., 5., -2.],
+            [4., 7., 20.],
+            [7., 6., 1.],
+        ]);
+        assert_eq!(u.determinant(), -174.0);
+
+        let mut u = Matrix::from([
+            [5., 3., 7.],
+            [2., -5., 8.],
+            [-6., 4., 9.],
+        ]);
+        assert_eq!(u.determinant(), -737.0);
+
+        let mut u = Matrix::from([
+            [ 8., 5., -2., 4.],
+            [ 4., 2.5, 20., 4.],
+            [ 8., 5., 1., 4.],
+            [28., -4., 17., 1.],
+        ]);
+        assert_eq!(u.determinant(), 1032.0);
+    }
 }
 
 fn test_matrix() {
