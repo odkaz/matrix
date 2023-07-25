@@ -1,12 +1,12 @@
+use crate::vector::Vector;
+use num::Float;
 use std::clone::Clone;
+use std::default::Default;
 use std::f32::consts::PI;
+use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::{Add, Mul, Sub};
-use std::default::Default;
-use std::fmt::Debug;
 use std::result;
-use num::{Float};
-use crate::vector::Vector;
 
 use std::convert::TryInto;
 
@@ -26,9 +26,7 @@ impl<T: Clone, const M: usize, const N: usize> From<[[T; N]; M]> for Matrix<T, M
         for item in s.iter() {
             d.push(item.to_vec());
         }
-        return Matrix {
-            data: d,
-        };
+        return Matrix { data: d };
     }
 }
 
@@ -58,7 +56,9 @@ impl<T: Display + Add<Output = T> + Clone, const M: usize, const N: usize> Matri
     }
 }
 
-impl<T: Display + Add<Output = T> + Clone, const M: usize, const N: usize> Add<Matrix<T, M, N>> for Matrix<T, M, N> {
+impl<T: Display + Add<Output = T> + Clone, const M: usize, const N: usize> Add<Matrix<T, M, N>>
+    for Matrix<T, M, N>
+{
     type Output = Matrix<T, M, N>;
     fn add(self, v: Matrix<T, M, N>) -> Matrix<T, M, N> {
         let mut res = Vec::new();
@@ -73,9 +73,7 @@ impl<T: Display + Add<Output = T> + Clone, const M: usize, const N: usize> Add<M
             }
             res.push(v);
         }
-        Matrix {
-            data: res,
-        }
+        Matrix { data: res }
     }
 }
 
@@ -97,7 +95,9 @@ impl<T: Display + Sub<Output = T> + Clone, const M: usize, const N: usize> Matri
     }
 }
 
-impl<T: Display + Sub<Output = T> + Clone, const M: usize, const N: usize> Sub<Matrix<T, M, N>> for Matrix<T, M, N> {
+impl<T: Display + Sub<Output = T> + Clone, const M: usize, const N: usize> Sub<Matrix<T, M, N>>
+    for Matrix<T, M, N>
+{
     type Output = Matrix<T, M, N>;
     fn sub(self, v: Matrix<T, M, N>) -> Matrix<T, M, N> {
         let mut res = Vec::new();
@@ -112,9 +112,7 @@ impl<T: Display + Sub<Output = T> + Clone, const M: usize, const N: usize> Sub<M
             }
             res.push(v);
         }
-        Matrix {
-            data: res,
-        }
+        Matrix { data: res }
     }
 }
 
@@ -134,8 +132,10 @@ impl<T: Display + Mul<Output = T> + Clone + Copy, const M: usize, const N: usize
 }
 
 impl<T, const M: usize, const N: usize> Matrix<T, M, N>
-    where T: Default + Float + Copy {
-    pub fn mul_mat<const H: usize>(&mut self, rhs: &Matrix<T, N, H>) -> Matrix<T, M, H>{
+where
+    T: Default + Float + Copy,
+{
+    pub fn mul_mat<const H: usize>(&mut self, rhs: &Matrix<T, N, H>) -> Matrix<T, M, H> {
         let mut res = Vec::new();
         for j in 0..M {
             let mut v = Vec::new();
@@ -148,9 +148,7 @@ impl<T, const M: usize, const N: usize> Matrix<T, M, N>
             }
             res.push(v);
         }
-        Matrix {
-            data: res,
-        }
+        Matrix { data: res }
     }
 
     pub fn mul_vec(&mut self, rhs: &Vector<T, N>) -> Vector<T, N> {
@@ -167,9 +165,11 @@ impl<T, const M: usize, const N: usize> Matrix<T, M, N>
 }
 
 impl<T, const M: usize, const N: usize, const H: usize> Mul<Matrix<T, N, H>> for Matrix<T, M, N>
-    where T: Default + Add<Output = T> + Mul<Output = T> + Copy {
+where
+    T: Default + Add<Output = T> + Mul<Output = T> + Copy,
+{
     type Output = Matrix<T, M, H>;
-     fn mul(self, rhs: Matrix<T, N, H>) -> Matrix<T, M, H>{
+    fn mul(self, rhs: Matrix<T, N, H>) -> Matrix<T, M, H> {
         let mut res = Vec::new();
         for j in 0..M {
             let mut v = Vec::new();
@@ -182,16 +182,16 @@ impl<T, const M: usize, const N: usize, const H: usize> Mul<Matrix<T, N, H>> for
             }
             res.push(v);
         }
-        Matrix {
-            data: res,
-        }
+        Matrix { data: res }
     }
 }
 
 impl<T, const M: usize, const N: usize> Mul<T> for Matrix<T, M, N>
-    where T: Float + Copy {
+where
+    T: Float + Copy,
+{
     type Output = Matrix<T, M, N>;
-     fn mul(self, rhs: T) -> Matrix<T, M, N>{
+    fn mul(self, rhs: T) -> Matrix<T, M, N> {
         let mut res = Vec::new();
         for j in 0..M {
             let mut v = Vec::new();
@@ -201,9 +201,7 @@ impl<T, const M: usize, const N: usize> Mul<T> for Matrix<T, M, N>
             }
             res.push(v);
         }
-        Matrix {
-            data: res,
-        }
+        Matrix { data: res }
     }
 }
 
@@ -236,8 +234,7 @@ impl<T: Float, const N: usize> Matrix<T, N, N> {
     }
 }
 
-impl<T: Float, const M: usize, const N: usize> Matrix<T, M, N>
-{
+impl<T: Float, const M: usize, const N: usize> Matrix<T, M, N> {
     pub fn transpose(&mut self) -> Matrix<T, N, M> {
         let mut res = Vec::new();
         for j in 0..N {
@@ -247,9 +244,7 @@ impl<T: Float, const M: usize, const N: usize> Matrix<T, M, N>
             }
             res.push(v);
         }
-        Matrix {
-            data: res,
-        }
+        Matrix { data: res }
     }
 }
 
@@ -271,11 +266,20 @@ impl<T: Float + Clone, const M: usize, const N: usize> Matrix<T, M, N> {
     }
 }
 
-impl<T: Float + Clone, const M: usize, const N: usize> Matrix<T, M, N> {
-    fn is_all_zero(&self, v: Vector<T, N>) -> bool {
-        for item in v.as_vec() {
-            if item != T::zero() {
-                return false
+impl<T: Float + Clone + Debug, const M: usize, const N: usize> Matrix<T, M, N> {
+    // fn is_all_zero(&self, v: Vector<T, N>) -> bool {
+    //     for item in v.as_vec() {
+    //         if item != T::zero() {
+    //             return false;
+    //         }
+    //     }
+    //     true
+    // }
+
+    fn is_all_zero(&self, index: usize) -> bool {
+        for item in &self.data[index] {
+            if item != &T::zero() {
+                return false;
             }
         }
         true
@@ -284,11 +288,20 @@ impl<T: Float + Clone, const M: usize, const N: usize> Matrix<T, M, N> {
     pub fn row_echelon(&mut self) -> Matrix<T, M, N> {
         let mut lead: usize = 0;
         for j in 0..M {
-            let mut v = self.as_vector(j);
-            if self.is_all_zero(v.clone()) {
-                self.data[M - 1] = v.as_vec();
+            if self.is_all_zero(j) {
+                for k in 0..M - j {
+                    let index = M - k - 1;
+                    let l = self.as_vector(index);
+                    if !self.is_all_zero(index) {
+                        self.data[index] = self.data[j].clone();
+                        self.data[j] = l.as_vec();
+                        break;
+                    }
+                }
             }
             for i in 0..N {
+                let mut v = self.as_vector(j);
+
                 //find the lead
                 if self.data[j][i] != T::zero() && i >= lead {
                     //lead to 1
@@ -318,8 +331,6 @@ impl<T: Float + Clone, const M: usize, const N: usize> Matrix<T, M, N> {
     }
 }
 
-
-
 fn vec_to_arr<T, const N: usize>(v: Vec<T>) -> [T; N] {
     v.try_into()
         .unwrap_or_else(|v: Vec<T>| panic!("Expected a Vec of length {} but it was {}", N, v.len()))
@@ -339,10 +350,10 @@ impl<T: Float, const M: usize, const N: usize> Matrix<T, M, N> {
 impl<T: Float, const M: usize> TMatrix<T, M> {
     fn _deter(&self, data: Vec<Vec<T>>, size: usize) -> T {
         if size == 1 {
-            return data[0][0]
+            return data[0][0];
         }
         if size == 2 {
-            return (data[0][0] * data[1][1]) - (data[0][1] * data[1][0])
+            return (data[0][0] * data[1][1]) - (data[0][1] * data[1][0]);
         }
         let mut res = T::zero();
         for i in 0..size {
@@ -373,7 +384,7 @@ impl<T: Float, const M: usize> TMatrix<T, M> {
 }
 
 impl<T: Float + Display + Debug, const M: usize> TMatrix<T, M> {
-    fn _identity() -> [[T; M]; M]{
+    fn _identity() -> [[T; M]; M] {
         let mut arr = [[T::zero(); M]; M];
         for i in 0..M {
             arr[i][i] = T::one();
@@ -381,7 +392,7 @@ impl<T: Float + Display + Debug, const M: usize> TMatrix<T, M> {
         arr
     }
 
-    fn _swap_row (mat: &mut [[T; M]; M], x: usize, y: usize) {
+    fn _swap_row(mat: &mut [[T; M]; M], x: usize, y: usize) {
         for i in 0..M {
             let tmp = mat[y][i];
             mat[y][i] = mat[x][i];
@@ -390,7 +401,6 @@ impl<T: Float + Display + Debug, const M: usize> TMatrix<T, M> {
     }
 
     pub fn inverse(&mut self) -> Result<TMatrix<T, M>, String> {
-
         let det = self.determinant();
         if det == T::zero() {
             panic!("determinant is zero")
@@ -447,17 +457,29 @@ impl<T: Float + Display + Debug, const M: usize> TMatrix<T, M> {
                 d[row][col] = T::zero();
             }
         }
-
         Ok(Matrix::from(res))
     }
-
-
 }
 
-
+impl<T: Float + Debug, const M: usize, const N: usize> Matrix<T, M, N> {
+    pub fn rank(&mut self) -> usize {
+        let mat = self.row_echelon().as_arr();
+        println!("mat: {:?}", mat);
+        let mut res: usize = 0;
+        for m in 0..M {
+            for n in m..N {
+                if mat[m][n] != T::zero() {
+                    res = res + 1;
+                    break;
+                }
+            }
+        }
+        res
+    }
+}
 
 pub fn identity_array() -> [[f32; 4]; 4] {
-    let mut trans:[[f32; 4]; 4] = [[0.; 4]; 4];
+    let mut trans: [[f32; 4]; 4] = [[0.; 4]; 4];
     trans[0][0] = 1.;
     trans[1][1] = 1.;
     trans[2][2] = 1.;
@@ -467,20 +489,20 @@ pub fn identity_array() -> [[f32; 4]; 4] {
 
 impl TMatrix4<f32> {
     pub fn identity() -> TMatrix4<f32> {
-        let mut trans:[[f32; 4]; 4] = identity_array();
+        let mut trans: [[f32; 4]; 4] = identity_array();
         Matrix::from(trans)
     }
 
-    pub fn translation(x: f32, y: f32, z:f32) -> TMatrix4<f32> {
-        let mut trans:[[f32; 4]; 4] = identity_array();
+    pub fn translation(x: f32, y: f32, z: f32) -> TMatrix4<f32> {
+        let mut trans: [[f32; 4]; 4] = identity_array();
         trans[0][3] = x;
         trans[1][3] = y;
         trans[2][3] = z;
         Matrix::from(trans)
     }
 
-    pub fn scale(x: f32, y: f32, z:f32) -> TMatrix4<f32> {
-        let mut scale:[[f32; 4]; 4] = identity_array();
+    pub fn scale(x: f32, y: f32, z: f32) -> TMatrix4<f32> {
+        let mut scale: [[f32; 4]; 4] = identity_array();
         scale[0][0] = x;
         scale[1][1] = y;
         scale[2][2] = z;
@@ -488,11 +510,11 @@ impl TMatrix4<f32> {
     }
 }
 
-impl TMatrix4<f32>{
+impl TMatrix4<f32> {
     pub fn as_mut_arr(&self) -> [[f32; 4]; 4] {
         let iter = self.data.iter();
-        let mut res:[[f32; 4]; 4] = [[0.; 4]; 4];
-        for (i , row) in iter.enumerate() {
+        let mut res: [[f32; 4]; 4] = [[0.; 4]; 4];
+        for (i, row) in iter.enumerate() {
             let slice = row.as_slice();
             res[i] = slice.try_into().unwrap();
         }
@@ -507,7 +529,7 @@ fn degree_to_radians(degree: f32) -> f32 {
 impl TMatrix4<f32> {
     pub fn rotation_x(degrees: f32) -> TMatrix4<f32> {
         let t: f32 = degree_to_radians(degrees);
-        let mut rot_x:[[f32; 4]; 4] = identity_array();
+        let mut rot_x: [[f32; 4]; 4] = identity_array();
         rot_x[1][1] = f32::cos(t);
         rot_x[1][2] = -f32::sin(t);
         rot_x[2][1] = f32::sin(t);
@@ -517,7 +539,7 @@ impl TMatrix4<f32> {
 
     pub fn rotation_y(degrees: f32) -> TMatrix4<f32> {
         let t: f32 = degree_to_radians(degrees);
-        let mut rot_y:[[f32; 4]; 4] = identity_array();
+        let mut rot_y: [[f32; 4]; 4] = identity_array();
         rot_y[0][0] = f32::cos(t);
         rot_y[0][2] = f32::sin(t);
         rot_y[2][0] = -f32::sin(t);
@@ -527,7 +549,7 @@ impl TMatrix4<f32> {
 
     pub fn rotation_z(degrees: f32) -> TMatrix4<f32> {
         let t: f32 = degree_to_radians(degrees);
-        let mut rot_z:[[f32; 4]; 4] = identity_array();
+        let mut rot_z: [[f32; 4]; 4] = identity_array();
         rot_z[0][0] = f32::cos(t);
         rot_z[0][1] = -f32::sin(t);
         rot_z[1][0] = f32::sin(t);
@@ -535,7 +557,7 @@ impl TMatrix4<f32> {
         Matrix::from(rot_z)
     }
 
-    pub fn rotation(x: f32, y: f32, z:f32) -> TMatrix4<f32> {
+    pub fn rotation(x: f32, y: f32, z: f32) -> TMatrix4<f32> {
         let mut rot_x = Self::rotation_x(x);
         let mut rot_y = Self::rotation_y(y);
         let mut rot_z = Self::rotation_z(z);

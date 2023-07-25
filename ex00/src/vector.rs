@@ -1,8 +1,8 @@
 use std::fmt::Display;
-use std::ops::{Add, Mul, Sub, Div, Index};
+use std::ops::{Add, Div, Index, Mul, Sub};
 extern crate num;
 
-use num::{Float};
+use num::Float;
 pub type TVector<T, const R: usize> = Vector<T, R>;
 pub type TVector2<T> = TVector<T, 2>;
 pub type TVector3<T> = TVector<T, 3>;
@@ -19,7 +19,6 @@ impl<T, const N: usize> From<[T; N]> for Vector<T, N> {
         return Vector { data: d };
     }
 }
-
 
 impl<T: std::fmt::Debug, const N: usize> Vector<T, N> {
     pub fn out(&self) {
@@ -58,9 +57,7 @@ impl<T: Clone + Add<Output = T>, const N: usize> Add<Vector<T, N>> for Vector<T,
         for i in 0..N {
             res.push(self.data[i].clone() + rhs.data[i].clone());
         }
-        Vector {
-            data: res,
-        }
+        Vector { data: res }
     }
 }
 
@@ -71,9 +68,7 @@ impl<T: Clone + Add<Output = T>, const N: usize> Add<&Vector<T, N>> for &Vector<
         for i in 0..N {
             res.push(self.data[i].clone() + rhs.data[i].clone());
         }
-        Vector {
-            data: res,
-        }
+        Vector { data: res }
     }
 }
 
@@ -91,9 +86,7 @@ impl<T: Clone + Float, const N: usize> Mul<T> for Vector<T, N> {
         for i in 0..N {
             res.push(self.data[i].clone() * rhs);
         }
-        Vector {
-            data: res,
-        }
+        Vector { data: res }
     }
 }
 
@@ -104,9 +97,7 @@ impl<T: Clone + Float, const N: usize> Div<T> for Vector<T, N> {
         for i in 0..N {
             res.push(self.data[i].clone() / rhs);
         }
-        Vector {
-            data: res,
-        }
+        Vector { data: res }
     }
 }
 
@@ -175,7 +166,9 @@ impl<T: Display, const N: usize> Display for Vector<T, N> {
     }
 }
 
-impl<T: Display + Default + Clone + Add<T, Output = T> + Mul<T, Output = T>, const N: usize> Vector<T, N> {
+impl<T: Display + Default + Clone + Add<T, Output = T> + Mul<T, Output = T>, const N: usize>
+    Vector<T, N>
+{
     pub fn dot(&self, v: &Vector<T, N>) -> T {
         let mut res = T::default();
         for (item1, item2) in self.data.iter().zip(v.data.iter()) {
@@ -203,16 +196,18 @@ impl<T: Float + Into<f32> + Add<f32, Output = f32>, const N: usize> Vector<T, N>
     }
 
     pub fn norm_inf(&mut self) -> f32 {
-        let max = self.data.iter().max_by(|x, y| x.abs().partial_cmp(&y.abs()).unwrap()).unwrap();
+        let max = self
+            .data
+            .iter()
+            .max_by(|x, y| x.abs().partial_cmp(&y.abs()).unwrap())
+            .unwrap();
         let cast: f32 = max.clone().abs().into();
         cast
     }
 }
 
-
-
 impl<T, const N: usize> Vector<T, N> {
-    pub fn as_slice(&self) -> & [T] {
+    pub fn as_slice(&self) -> &[T] {
         self.data.as_slice()
     }
 }
@@ -228,7 +223,7 @@ impl<T: Copy, const N: usize> Vector<T, N> {
 }
 
 impl<T: Float, const N: usize> Vector<T, N> {
-    pub fn abs (&self) -> T {
+    pub fn abs(&self) -> T {
         let mut total = T::zero();
         for i in 0..N {
             total = total + (self.data[i] * self.data[i]);
@@ -238,7 +233,7 @@ impl<T: Float, const N: usize> Vector<T, N> {
 }
 
 impl<T: Float, const N: usize> Vector<T, N> {
-    pub fn normalize (&self) -> Vector<T, N> {
+    pub fn normalize(&self) -> Vector<T, N> {
         let mut total = T::zero();
         for i in 0..N {
             total = total + (self.data[i] * self.data[i]);
@@ -248,14 +243,12 @@ impl<T: Float, const N: usize> Vector<T, N> {
         for item in self.data.clone() {
             res.push(item / sq);
         }
-        Vector {
-            data: res.clone(),
-        }
+        Vector { data: res.clone() }
     }
 }
 
 impl<T: Float, const N: usize> Vector<T, N> {
-    pub fn linear_combination (u: &[Vector<T, N>], coefs: &[T]) -> Vector<T, N> {
+    pub fn linear_combination(u: &[Vector<T, N>], coefs: &[T]) -> Vector<T, N> {
         let mut res = Vector::from([T::zero(); N]);
         for (i, item) in u.iter().enumerate() {
             let mut tmp = item.clone();
@@ -263,7 +256,6 @@ impl<T: Float, const N: usize> Vector<T, N> {
             res = res + tmp;
         }
         res
-
     }
 }
 
@@ -278,4 +270,3 @@ impl<T: Float, const N: usize> Vector<T, N> {
 //         Vector::from(res)
 //     }
 // }
-
