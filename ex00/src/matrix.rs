@@ -373,52 +373,86 @@ impl<T: Float, const M: usize> TMatrix<T, M> {
 }
 
 impl<T: Float + Display + Debug, const M: usize> TMatrix<T, M> {
-    fn _get_minor(&self, data: Vec<Vec<T>>, y: usize, x: usize, size: usize) -> T {
-        let mut vec2d = Vec::new();
-        for j in 0..M {
-            let mut v = Vec::new();
-            for i in 0..M {
-                if j != y && i != x {
-                    println!("push{}", data[j][i]);
-                    v.push(data[j][i]);
-                }
-            }
-            if v.len() > 0 {
-                vec2d.push(v);
-            }
-        }
-        let mut sign = T::one();
-        if (y + x) % 2 == 1 {
-            sign = -T::one();
-        }
-        println!("vec2d{:?}", vec2d);
-        sign * self._deter(vec2d, size - 1)
-    }
-    fn _minor(&self, data: Vec<Vec<T>>, size: usize) -> TMatrix<T, M> {
+    fn _identity() -> [[T; M]; M]{
         let mut arr = [[T::zero(); M]; M];
-        for j in 0..M {
-            for i in 0..M {
-                arr[j][i] = self._get_minor(data.clone(), j, i, size);
-            }
+        for i in 0..M {
+            arr[i][i] = T::one();
         }
-        Matrix::from(arr)
+        arr
     }
-    fn _get_adj(&mut self) -> TMatrix<T, M> {
-        let trans = self.transpose();
-        let adj = self._minor(trans.as_vec(), M);
-        adj
+
+    fn _swap_row (mat: &mut [[T; M]; M], x: usize, y: usize) {
+        for i in 0..M {
+            let tmp = mat[y][i];
+            mat[y][i] = mat[x][i];
+            mat[x][i] = tmp;
+        }
     }
+
     pub fn inverse(&mut self) -> Result<TMatrix<T, M>, String> {
+
         let det = self.determinant();
         if det == T::zero() {
             panic!("determinant is zero")
         }
-        let adj = self._get_adj();
-        let res = adj * (T::one() / det);
-        Ok(res)
-    }
-}
+        let mut res = TMatrix::<T, M>::_identity();
+        let mut d = self.as_arr();
 
+        //set the row so that the pivot is different than zero
+        for i in 0..M {
+            if d[i][i] == T::zero() {
+                let mut big = i;
+                for j in 0..M {
+                    if T::abs(d[j][i]) > T::abs(d[big][i]) {
+                        big = j;
+                    }
+                }
+                if big == i {
+                    panic!("singular matrix");
+                }
+                TMatrix::<T, M>::_swap_row(&mut res, i, big);
+                TMatrix::<T, M>::_swap_row(&mut d, i, big);
+            }
+        }
+
+        //eliminate all numbers under the diagonal element
+        for col in 0..M - 1 {
+            for row in col + 1..M {
+                let k = d[row][col] / d[col][col];
+                for l in 0..M {
+                    d[row][l] = d[row][l] - k * d[col][l];
+                    res[row][l] = res[row][l] - k * res[col][l];
+                }
+                d[row][col] = T::zero();
+            }
+        }
+
+        //scale all the pivots coefficients to 1
+        for row in 0..M {
+            let div = d[row][row];
+            for col in 0..M {
+                d[row][col] = d[row][col] / div;
+                res[row][col] = res[row][col] / div;
+            }
+        }
+
+        //eliminate all numbers above the diagonal
+        for row in 0..M {
+            for col in row + 1..M {
+                let k = d[row][col];
+                for l in 0..M {
+                    d[row][l] = d[row][l] - d[col][l] * k;
+                    res[row][l] = res[row][l] - res[col][l] * k;
+                }
+                d[row][col] = T::zero();
+            }
+        }
+
+        Ok(Matrix::from(res))
+    }
+
+
+}
 
 
 
