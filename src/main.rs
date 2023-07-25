@@ -312,6 +312,11 @@ fn test_matrix() {
     println!("u: {}", u.row_echelon());
 }
 
+fn bonus() {
+
+}
+
 fn main() {
-    test_matrix();
+    // test_matrix();
+    bonus();
 }
