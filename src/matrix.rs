@@ -2,12 +2,9 @@ use crate::vector::Vector;
 use num::Float;
 use std::clone::Clone;
 use std::default::Default;
-use std::f32::consts::PI;
 use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::{Add, Mul, Sub};
-use std::result;
-
 use std::convert::TryInto;
 
 pub type TMatrix<T, const M: usize> = Matrix<T, M, M>;
@@ -205,25 +202,6 @@ where
     }
 }
 
-// impl<T, const M: usize, const N: usize> Mul<f32> for Matrix<T, M, N>
-//     where T: Default + Add<Output = T> + Mul<f32, Output = T> + Copy {
-//     type Output = Matrix<T, M, N>;
-//      fn mul(self, rhs: f32) -> Matrix<T, M, N>{
-//         let mut res = Vec::new();
-//         for j in 0..M {
-//             let mut v = Vec::new();
-//             for i in 0..N {
-//                 let sum = self.data[j][i] * rhs;
-//                 v.push(sum);
-//             }
-//             res.push(v);
-//         }
-//         Matrix {
-//             data: res,
-//         }
-//     }
-// }
-
 impl<T: Float, const N: usize> Matrix<T, N, N> {
     pub fn trace(&mut self) -> T {
         let mut res = T::zero();
@@ -266,16 +244,7 @@ impl<T: Float + Clone, const M: usize, const N: usize> Matrix<T, M, N> {
     }
 }
 
-impl<T: Float + Clone + Debug, const M: usize, const N: usize> Matrix<T, M, N> {
-    // fn is_all_zero(&self, v: Vector<T, N>) -> bool {
-    //     for item in v.as_vec() {
-    //         if item != T::zero() {
-    //             return false;
-    //         }
-    //     }
-    //     true
-    // }
-
+impl<T: Float + Clone, const M: usize, const N: usize> Matrix<T, M, N> {
     fn is_all_zero(&self, index: usize) -> bool {
         for item in &self.data[index] {
             if item != &T::zero() {
@@ -339,10 +308,6 @@ fn vec_to_arr<T, const N: usize>(v: Vec<T>) -> [T; N] {
 impl<T: Float, const M: usize, const N: usize> Matrix<T, M, N> {
     pub fn as_vector(&self, h: usize) -> Vector<T, N> {
         let arr = vec_to_arr(self.data[h].clone());
-        // let mut arr = [T::zero(); N];
-        // for i in 0..N {
-        //     arr[i] = self.data[h][i];
-        // }
         Vector::from(arr)
     }
 }
@@ -383,7 +348,7 @@ impl<T: Float, const M: usize> TMatrix<T, M> {
     }
 }
 
-impl<T: Float + Display + Debug, const M: usize> TMatrix<T, M> {
+impl<T: Float + Display, const M: usize> TMatrix<T, M> {
     fn _identity() -> [[T; M]; M] {
         let mut arr = [[T::zero(); M]; M];
         for i in 0..M {
@@ -461,10 +426,9 @@ impl<T: Float + Display + Debug, const M: usize> TMatrix<T, M> {
     }
 }
 
-impl<T: Float + Debug, const M: usize, const N: usize> Matrix<T, M, N> {
+impl<T: Float, const M: usize, const N: usize> Matrix<T, M, N> {
     pub fn rank(&mut self) -> usize {
         let mat = self.row_echelon().as_arr();
-        println!("mat: {:?}", mat);
         let mut res: usize = 0;
         for m in 0..M {
             for n in m..N {
@@ -475,94 +439,6 @@ impl<T: Float + Debug, const M: usize, const N: usize> Matrix<T, M, N> {
             }
         }
         res
-    }
-}
-
-pub fn identity_array() -> [[f32; 4]; 4] {
-    let mut trans: [[f32; 4]; 4] = [[0.; 4]; 4];
-    trans[0][0] = 1.;
-    trans[1][1] = 1.;
-    trans[2][2] = 1.;
-    trans[3][3] = 1.;
-    trans
-}
-
-impl TMatrix4<f32> {
-    pub fn identity() -> TMatrix4<f32> {
-        let mut trans: [[f32; 4]; 4] = identity_array();
-        Matrix::from(trans)
-    }
-
-    pub fn translation(x: f32, y: f32, z: f32) -> TMatrix4<f32> {
-        let mut trans: [[f32; 4]; 4] = identity_array();
-        trans[0][3] = x;
-        trans[1][3] = y;
-        trans[2][3] = z;
-        Matrix::from(trans)
-    }
-
-    pub fn scale(x: f32, y: f32, z: f32) -> TMatrix4<f32> {
-        let mut scale: [[f32; 4]; 4] = identity_array();
-        scale[0][0] = x;
-        scale[1][1] = y;
-        scale[2][2] = z;
-        Matrix::from(scale)
-    }
-}
-
-impl TMatrix4<f32> {
-    pub fn as_mut_arr(&self) -> [[f32; 4]; 4] {
-        let iter = self.data.iter();
-        let mut res: [[f32; 4]; 4] = [[0.; 4]; 4];
-        for (i, row) in iter.enumerate() {
-            let slice = row.as_slice();
-            res[i] = slice.try_into().unwrap();
-        }
-        res
-    }
-}
-
-fn degree_to_radians(degree: f32) -> f32 {
-    degree / 180. * PI
-}
-
-impl TMatrix4<f32> {
-    pub fn rotation_x(degrees: f32) -> TMatrix4<f32> {
-        let t: f32 = degree_to_radians(degrees);
-        let mut rot_x: [[f32; 4]; 4] = identity_array();
-        rot_x[1][1] = f32::cos(t);
-        rot_x[1][2] = -f32::sin(t);
-        rot_x[2][1] = f32::sin(t);
-        rot_x[2][2] = f32::cos(t);
-        Matrix::from(rot_x)
-    }
-
-    pub fn rotation_y(degrees: f32) -> TMatrix4<f32> {
-        let t: f32 = degree_to_radians(degrees);
-        let mut rot_y: [[f32; 4]; 4] = identity_array();
-        rot_y[0][0] = f32::cos(t);
-        rot_y[0][2] = f32::sin(t);
-        rot_y[2][0] = -f32::sin(t);
-        rot_y[2][2] = f32::cos(t);
-        Matrix::from(rot_y)
-    }
-
-    pub fn rotation_z(degrees: f32) -> TMatrix4<f32> {
-        let t: f32 = degree_to_radians(degrees);
-        let mut rot_z: [[f32; 4]; 4] = identity_array();
-        rot_z[0][0] = f32::cos(t);
-        rot_z[0][1] = -f32::sin(t);
-        rot_z[1][0] = f32::sin(t);
-        rot_z[1][1] = f32::cos(t);
-        Matrix::from(rot_z)
-    }
-
-    pub fn rotation(x: f32, y: f32, z: f32) -> TMatrix4<f32> {
-        let mut rot_x = Self::rotation_x(x);
-        let mut rot_y = Self::rotation_y(y);
-        let mut rot_z = Self::rotation_z(z);
-        // Self::rotation_x(x) * Self::rotation_y(t_y) * Self::rotation_z(t_z)
-        rot_x * rot_y * rot_z
     }
 }
 

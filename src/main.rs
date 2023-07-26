@@ -7,7 +7,7 @@ use matrix::Matrix;
 use num::Float;
 use std::{
     fmt::Display,
-    ops::{Add, Div, Index, Mul, Sub},
+    ops::{Add, Div, Mul, Sub},
 };
 
 pub fn lerp<V: Clone + Add<Output = V> + Sub<Output = V> + Mul<f32, Output = V>>(
@@ -40,6 +40,16 @@ pub fn cross_product<T: Float>(u: &TVector3<T>, v: &TVector3<T>) -> TVector3<T> 
     res[1] = u_arr[2] * v_arr[0] - u_arr[0] * v_arr[2];
     res[2] = u_arr[0] * v_arr[1] - u_arr[1] * v_arr[0];
     Vector::from(res)
+}
+
+pub fn projection(fov: f32, aspect: f32, znear: f32, zfar: f32) -> TMatrix4<f32> {
+    let mut arr = [[0.; 4]; 4];
+    arr[0][0] = aspect * (1. / f32::tan(fov / 2.));
+    arr[1][1] = 1. / f32::tan(fov / 2.);
+    arr[2][2] = zfar / (zfar - znear);
+    arr[2][3] = (-zfar * znear) / (zfar - znear);
+    arr[3][2] = 1.;
+    Matrix::from(arr)
 }
 
 #[cfg(test)]
@@ -297,12 +307,19 @@ mod tests {
 
 fn test_matrix() {
     let mut u = Matrix::from([[1., 2., 0., 0.], [2., 4., 0., 0.], [-1., 2., 1., 1.]]);
-    // let mut u = Matrix::from([[1., 2., 0.], [3., 0., 4.], [0., 5., 0.]]);
     println!("u: {}", u.row_echelon());
 }
 
 fn bonus() {
-
+    let znear = 0.1;
+    let zfar = 100.0;
+    let degree = 135.;
+    let width = 600.;
+    let height = 600.;
+    let fov = degree / 360. * std::f32::consts::PI;
+    let aspect = height / width;
+    let res = projection(fov, aspect, znear, zfar);
+    println!("res{}", res);
 }
 
 fn main() {
