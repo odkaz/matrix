@@ -1,4 +1,4 @@
-use crate::vector::Vector;
+use crate::base_structs::vector::Vector;
 use num::Float;
 use std::clone::Clone;
 use std::default::Default;

@@ -1,0 +1,1 @@
+pub trait RealNum: num::Float + Clone + Copy {}
