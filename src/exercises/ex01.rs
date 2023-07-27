@@ -1,7 +1,21 @@
+use crate::base_structs::vector::Vector;
+use crate::num_traits::scalar::Scalar;
+
+impl<T: Scalar, const N: usize> Vector<T, N> {
+    pub fn linear_combination(u: &[Vector<T, N>], coefs: &[T]) -> Vector<T, N> {
+        let mut res = Vector::from([T::zero(); N]);
+        for (i, item) in u.iter().enumerate() {
+            let mut tmp = item.clone();
+            tmp.scl(coefs[i]);
+            res = res + tmp;
+        }
+        res
+    }
+}
 
 #[cfg(test)]
 mod linear_combination {
-    use crate::base_structs::vector::Vector;
+    use super::*;
 
     #[test]
     fn test01() {

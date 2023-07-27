@@ -1,4 +1,5 @@
 use crate::base_structs::vector::Vector;
+use crate::num_traits::scalar::Scalar;
 use num::Float;
 use std::clone::Clone;
 use std::default::Default;
@@ -35,7 +36,7 @@ impl<T: std::fmt::Debug, const M: usize, const N: usize> Matrix<T, M, N> {
     }
 }
 
-impl<T: Display + Add<Output = T> + Clone, const M: usize, const N: usize> Matrix<T, M, N> {
+impl<T: Display + Scalar + Add<Output = T>, const M: usize, const N: usize> Matrix<T, M, N> {
     pub fn add(&mut self, v: &Matrix<T, M, N>) {
         let mut res = Vec::new();
         for j in 0..M {
@@ -244,68 +245,68 @@ impl<T: Float + Clone, const M: usize, const N: usize> Matrix<T, M, N> {
     }
 }
 
-impl<T: Float + Clone, const M: usize, const N: usize> Matrix<T, M, N> {
-    fn is_all_zero(&self, index: usize) -> bool {
-        for item in &self.data[index] {
-            if item != &T::zero() {
-                return false;
-            }
-        }
-        true
-    }
+// impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
+//     fn is_all_zero(&self, index: usize) -> bool {
+//         for item in &self.data[index] {
+//             if item != &T::zero() {
+//                 return false;
+//             }
+//         }
+//         true
+//     }
 
-    pub fn row_echelon(&mut self) -> Matrix<T, M, N> {
-        let mut lead: usize = 0;
-        for j in 0..M {
-            if self.is_all_zero(j) {
-                for k in 0..M - j {
-                    let index = M - k - 1;
-                    let l = self.as_vector(index);
-                    if !self.is_all_zero(index) {
-                        self.data[index] = self.data[j].clone();
-                        self.data[j] = l.as_vec();
-                        break;
-                    }
-                }
-            }
-            for i in 0..N {
-                let mut v = self.as_vector(j);
+//     pub fn row_echelon(&mut self) -> Matrix<T, M, N> {
+//         let mut lead: usize = 0;
+//         for j in 0..M {
+//             if self.is_all_zero(j) {
+//                 for k in 0..M - j {
+//                     let index = M - k - 1;
+//                     let l = self.as_vector(index);
+//                     if !self.is_all_zero(index) {
+//                         self.data[index] = self.data[j].clone();
+//                         self.data[j] = l.as_vec();
+//                         break;
+//                     }
+//                 }
+//             }
+//             for i in 0..N {
+//                 let mut v = self.as_vector(j);
 
-                //find the lead
-                if self.data[j][i] != T::zero() && i >= lead {
-                    //lead to 1
-                    v = v.clone() / v[i];
-                    self.data[j] = v.as_vec();
+//                 //find the lead
+//                 if self.data[j][i] != T::zero() && i >= lead {
+//                     //lead to 1
+//                     v = v.clone() / v[i];
+//                     self.data[j] = v.as_vec();
 
-                    //pivot column to 0
-                    for x in 0..M {
-                        if x == j {
-                            continue;
-                        }
-                        let coef = self.data[x][i];
-                        if coef != T::zero() {
-                            let mut tmp = self.as_vector(x);
-                            tmp = tmp.clone() - v.clone() * coef;
-                            self.data[x] = tmp.as_vec();
-                        }
-                    }
-                    lead = i;
-                    break;
-                }
-            }
-        }
-        Matrix {
-            data: self.data.clone(),
-        }
-    }
-}
+//                     //pivot column to 0
+//                     for x in 0..M {
+//                         if x == j {
+//                             continue;
+//                         }
+//                         let coef = self.data[x][i];
+//                         if coef != T::zero() {
+//                             let mut tmp = self.as_vector(x);
+//                             tmp = tmp.clone() - v.clone() * coef;
+//                             self.data[x] = tmp.as_vec();
+//                         }
+//                     }
+//                     lead = i;
+//                     break;
+//                 }
+//             }
+//         }
+//         Matrix {
+//             data: self.data.clone(),
+//         }
+//     }
+// }
 
 fn vec_to_arr<T, const N: usize>(v: Vec<T>) -> [T; N] {
     v.try_into()
         .unwrap_or_else(|v: Vec<T>| panic!("Expected a Vec of length {} but it was {}", N, v.len()))
 }
 
-impl<T: Float, const M: usize, const N: usize> Matrix<T, M, N> {
+impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
     pub fn as_vector(&self, h: usize) -> Vector<T, N> {
         let arr = vec_to_arr(self.data[h].clone());
         Vector::from(arr)
@@ -426,21 +427,21 @@ impl<T: Float + Display, const M: usize> TMatrix<T, M> {
     }
 }
 
-impl<T: Float, const M: usize, const N: usize> Matrix<T, M, N> {
-    pub fn rank(&mut self) -> usize {
-        let mat = self.row_echelon().as_arr();
-        let mut res: usize = 0;
-        for m in 0..M {
-            for n in m..N {
-                if mat[m][n] != T::zero() {
-                    res = res + 1;
-                    break;
-                }
-            }
-        }
-        res
-    }
-}
+// impl<T: Float, const M: usize, const N: usize> Matrix<T, M, N> {
+//     pub fn rank(&mut self) -> usize {
+//         let mat = self.row_echelon().as_arr();
+//         let mut res: usize = 0;
+//         for m in 0..M {
+//             for n in m..N {
+//                 if mat[m][n] != T::zero() {
+//                     res = res + 1;
+//                     break;
+//                 }
+//             }
+//         }
+//         res
+//     }
+// }
 
 impl<T: Display, const M: usize, const N: usize> Display for Matrix<T, M, N> {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {

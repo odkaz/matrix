@@ -1,3 +1,18 @@
+use crate::num_traits::scalar::Scalar;
+use crate::base_structs::vector::Vector;
+
+impl<T: Scalar, const N: usize>
+    Vector<T, N>
+{
+    pub fn dot(&self, v: &Vector<T, N>) -> T {
+        let mut res = T::zero();
+        for (item1, item2) in self.as_vec().iter().zip(v.as_vec().iter()) {
+            res = res + item1.clone() * item2.clone();
+        }
+        res
+    }
+}
+
 #[cfg(test)]
 mod dot {
     use crate::base_structs::vector::Vector;
