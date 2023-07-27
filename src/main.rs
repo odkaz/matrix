@@ -11,15 +11,7 @@ use matrixlib::exercises::ex04;
 
 
 
-pub fn cross_product<T: Float>(u: &TVector3<T>, v: &TVector3<T>) -> TVector3<T> {
-    let mut res = [T::zero(); 3];
-    let u_arr = u.as_slice();
-    let v_arr = v.as_slice();
-    res[0] = u_arr[1] * v_arr[2] - u_arr[2] * v_arr[1];
-    res[1] = u_arr[2] * v_arr[0] - u_arr[0] * v_arr[2];
-    res[2] = u_arr[0] * v_arr[1] - u_arr[1] * v_arr[0];
-    Vector::from(res)
-}
+
 
 pub fn projection(fov: f32, aspect: f32, znear: f32, zfar: f32) -> TMatrix4<f32> {
     let mut arr = [[0.; 4]; 4];
@@ -44,50 +36,8 @@ mod tests {
 
 
 
-    // #[test]
-    // fn test_cross() {
-    //     let u = Vector::from([0., 0., 1.]);
-    //     let v = Vector::from([1., 0., 0.]);
-    //     println!("{}", cross_product(&u, &v));
-    //     assert_eq!(cross_product(&u, &v), Vector::from([0., 1., 0.]));
 
-    //     let u = Vector::from([1., 2., 3.]);
-    //     let v = Vector::from([4., 5., 6.]);
-    //     println!("{}", cross_product(&u, &v));
-    //     assert_eq!(cross_product(&u, &v), Vector::from([-3., 6., -3.]));
 
-    //     let u = Vector::from([4., 2., -3.]);
-    //     let v = Vector::from([-2., -5., 16.]);
-    //     println!("{}", cross_product(&u, &v));
-    //     assert_eq!(cross_product(&u, &v), Vector::from([17., -58., -16.]));
-    // }
-
-    // #[test]
-    // fn test_mul() {
-    //     let mut u = Matrix::from([[1., 0.], [0., 1.]]);
-    //     let v = Vector::from([4., 2.]);
-    //     assert_eq!(u.mul_vec(&v), Vector::from([4., 2.]));
-
-    //     let mut u = Matrix::from([[2., 0.], [0., 2.]]);
-    //     let v = Vector::from([4., 2.]);
-    //     assert_eq!(u.mul_vec(&v), Vector::from([8., 4.]));
-
-    //     let mut u = Matrix::from([[2., -2.], [-2., 2.]]);
-    //     let v = Vector::from([4., 2.]);
-    //     assert_eq!(u.mul_vec(&v), Vector::from([4., -4.]));
-
-    //     let mut u = Matrix::from([[1., 0.], [0., 1.]]);
-    //     let v = Matrix::from([[1., 0.], [0., 1.]]);
-    //     assert_eq!(u.mul_mat(&v), Matrix::from([[1., 0.], [0., 1.]]));
-
-    //     let mut u = Matrix::from([[1., 0.], [0., 1.]]);
-    //     let v = Matrix::from([[2., 1.], [4., 2.]]);
-    //     assert_eq!(u.mul_mat(&v), Matrix::from([[2., 1.], [4., 2.]]));
-
-    //     let mut u = Matrix::from([[3., -5.], [6., 8.]]);
-    //     let v = Matrix::from([[2., 1.], [4., 2.]]);
-    //     assert_eq!(u.mul_mat(&v), Matrix::from([[-14., -7.], [44., 22.]]));
-    // }
 
     // #[test]
     // fn test_trace() {
@@ -212,8 +162,9 @@ fn bonus() {
 }
 
 fn test() {
-    let mut u = Vector::from([0., 0., 0.]);
-    println!("u: {}", u.norm_1());
+    let mut u = Matrix::from([[1., 0.], [0., 1.]]);
+    let v = Vector::from([4., 2.]);
+    println!("u: {}", u.mul_vec(&v));
 }
 fn main() {
     // bonus();

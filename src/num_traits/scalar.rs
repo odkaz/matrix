@@ -1,7 +1,7 @@
-use std::ops::{Add, Mul, Div, Sub};
+use std::ops::{Add, Mul, Div, Sub, Neg};
 use std::fmt::{Display, Debug};
 
-pub trait Scalar: Display + Debug + Clone + Copy + Add<Output = Self> + Mul<Output = Self> + Div<Output = Self> + Sub<Output = Self> + PartialEq + PartialOrd {
+pub trait Scalar: Display + Debug + Clone + Copy + Add<Output = Self> + Mul<Output = Self> + Div<Output = Self> + Sub<Output = Self> + Neg<Output = Self> + PartialEq + PartialOrd {
     fn zero() -> Self;
     fn one() -> Self;
     fn abs(&self) -> Self;

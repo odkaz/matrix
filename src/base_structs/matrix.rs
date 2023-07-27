@@ -1,6 +1,6 @@
 use crate::base_structs::vector::Vector;
 use crate::num_traits::scalar::Scalar;
-use num::Float;
+// use num::Scalar;
 use std::clone::Clone;
 use std::default::Default;
 use std::fmt::Debug;
@@ -28,7 +28,7 @@ impl<T: Clone, const M: usize, const N: usize> From<[[T; N]; M]> for Matrix<T, M
     }
 }
 
-impl<T: std::fmt::Debug, const M: usize, const N: usize> Matrix<T, M, N> {
+impl<T: Debug, const M: usize, const N: usize> Matrix<T, M, N> {
     pub fn out(&self) {
         for item in self.data.iter() {
             println!("{:?}", item);
@@ -36,7 +36,7 @@ impl<T: std::fmt::Debug, const M: usize, const N: usize> Matrix<T, M, N> {
     }
 }
 
-impl<T: Display + Scalar + Add<Output = T>, const M: usize, const N: usize> Matrix<T, M, N> {
+impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
     pub fn add(&mut self, v: &Matrix<T, M, N>) {
         let mut res = Vec::new();
         for j in 0..M {
@@ -54,7 +54,7 @@ impl<T: Display + Scalar + Add<Output = T>, const M: usize, const N: usize> Matr
     }
 }
 
-impl<T: Display + Add<Output = T> + Clone, const M: usize, const N: usize> Add<Matrix<T, M, N>>
+impl<T: Scalar, const M: usize, const N: usize> Add<Matrix<T, M, N>>
     for Matrix<T, M, N>
 {
     type Output = Matrix<T, M, N>;
@@ -75,7 +75,7 @@ impl<T: Display + Add<Output = T> + Clone, const M: usize, const N: usize> Add<M
     }
 }
 
-impl<T: Display + Sub<Output = T> + Clone, const M: usize, const N: usize> Matrix<T, M, N> {
+impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
     pub fn sub(&mut self, v: &Matrix<T, M, N>) {
         let mut res = Vec::new();
         for j in 0..M {
@@ -93,7 +93,7 @@ impl<T: Display + Sub<Output = T> + Clone, const M: usize, const N: usize> Matri
     }
 }
 
-impl<T: Display + Sub<Output = T> + Clone, const M: usize, const N: usize> Sub<Matrix<T, M, N>>
+impl<T: Scalar, const M: usize, const N: usize> Sub<Matrix<T, M, N>>
     for Matrix<T, M, N>
 {
     type Output = Matrix<T, M, N>;
@@ -114,7 +114,7 @@ impl<T: Display + Sub<Output = T> + Clone, const M: usize, const N: usize> Sub<M
     }
 }
 
-impl<T: Display + Mul<Output = T> + Clone + Copy, const M: usize, const N: usize> Matrix<T, M, N> {
+impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
     pub fn scl(&mut self, a: T) {
         let mut res = Vec::new();
         for j in 0..M {
@@ -129,50 +129,16 @@ impl<T: Display + Mul<Output = T> + Clone + Copy, const M: usize, const N: usize
     }
 }
 
-impl<T, const M: usize, const N: usize> Matrix<T, M, N>
-where
-    T: Default + Float + Copy,
-{
-    pub fn mul_mat<const H: usize>(&mut self, rhs: &Matrix<T, N, H>) -> Matrix<T, M, H> {
-        let mut res = Vec::new();
-        for j in 0..M {
-            let mut v = Vec::new();
-            for i in 0..H {
-                let mut sum: T = Default::default();
-                for k in 0..N {
-                    sum = sum + (self.data[j][k] * rhs.data[k][i]);
-                }
-                v.push(sum);
-            }
-            res.push(v);
-        }
-        Matrix { data: res }
-    }
 
-    pub fn mul_vec(&mut self, rhs: &Vector<T, N>) -> Vector<T, N> {
-        let mut res = [T::default(); N];
-        for j in 0..M {
-            let mut sum: T = Default::default();
-            for i in 0..N {
-                sum = sum + (self.data[j][i] * rhs[i]);
-            }
-            res[j] = sum;
-        }
-        Vector::from(res)
-    }
-}
 
-impl<T, const M: usize, const N: usize, const H: usize> Mul<Matrix<T, N, H>> for Matrix<T, M, N>
-where
-    T: Default + Add<Output = T> + Mul<Output = T> + Copy,
-{
+impl<T: Scalar, const M: usize, const N: usize, const H: usize> Mul<Matrix<T, N, H>> for Matrix<T, M, N> {
     type Output = Matrix<T, M, H>;
     fn mul(self, rhs: Matrix<T, N, H>) -> Matrix<T, M, H> {
         let mut res = Vec::new();
         for j in 0..M {
             let mut v = Vec::new();
             for i in 0..H {
-                let mut sum: T = Default::default();
+                let mut sum: T = T::zero();
                 for k in 0..N {
                     sum = sum + (self.data[j][k] * rhs.data[k][i]);
                 }
@@ -184,10 +150,7 @@ where
     }
 }
 
-impl<T, const M: usize, const N: usize> Mul<T> for Matrix<T, M, N>
-where
-    T: Float + Copy,
-{
+impl<T: Scalar, const M: usize, const N: usize> Mul<T> for Matrix<T, M, N> {
     type Output = Matrix<T, M, N>;
     fn mul(self, rhs: T) -> Matrix<T, M, N> {
         let mut res = Vec::new();
@@ -203,7 +166,7 @@ where
     }
 }
 
-impl<T: Float, const N: usize> Matrix<T, N, N> {
+impl<T: Scalar, const N: usize> Matrix<T, N, N> {
     pub fn trace(&mut self) -> T {
         let mut res = T::zero();
         for i in 0..N {
@@ -213,7 +176,7 @@ impl<T: Float, const N: usize> Matrix<T, N, N> {
     }
 }
 
-impl<T: Float, const M: usize, const N: usize> Matrix<T, M, N> {
+impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
     pub fn transpose(&mut self) -> Matrix<T, N, M> {
         let mut res = Vec::new();
         for j in 0..N {
@@ -227,7 +190,7 @@ impl<T: Float, const M: usize, const N: usize> Matrix<T, M, N> {
     }
 }
 
-impl<T: Float + Clone, const M: usize, const N: usize> Matrix<T, M, N> {
+impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
     pub fn as_arr(&mut self) -> [[T; N]; M] {
         let mut res = [[T::zero(); N]; M];
         for j in 0..M {
@@ -239,7 +202,7 @@ impl<T: Float + Clone, const M: usize, const N: usize> Matrix<T, M, N> {
     }
 }
 
-impl<T: Float + Clone, const M: usize, const N: usize> Matrix<T, M, N> {
+impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
     pub fn as_vec(&self) -> Vec<Vec<T>> {
         self.data.clone()
     }
@@ -313,7 +276,7 @@ impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
     }
 }
 
-impl<T: Float, const M: usize> TMatrix<T, M> {
+impl<T: Scalar, const M: usize> TMatrix<T, M> {
     fn _deter(&self, data: Vec<Vec<T>>, size: usize) -> T {
         if size == 1 {
             return data[0][0];
@@ -349,7 +312,7 @@ impl<T: Float, const M: usize> TMatrix<T, M> {
     }
 }
 
-impl<T: Float + Display, const M: usize> TMatrix<T, M> {
+impl<T: Scalar, const M: usize> TMatrix<T, M> {
     fn _identity() -> [[T; M]; M] {
         let mut arr = [[T::zero(); M]; M];
         for i in 0..M {
@@ -379,7 +342,7 @@ impl<T: Float + Display, const M: usize> TMatrix<T, M> {
             if d[i][i] == T::zero() {
                 let mut big = i;
                 for j in 0..M {
-                    if T::abs(d[j][i]) > T::abs(d[big][i]) {
+                    if T::abs(&d[j][i]) > T::abs(&d[big][i]) {
                         big = j;
                     }
                 }
@@ -427,7 +390,7 @@ impl<T: Float + Display, const M: usize> TMatrix<T, M> {
     }
 }
 
-// impl<T: Float, const M: usize, const N: usize> Matrix<T, M, N> {
+// impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
 //     pub fn rank(&mut self) -> usize {
 //         let mat = self.row_echelon().as_arr();
 //         let mut res: usize = 0;
