@@ -2,7 +2,7 @@ use crate::base_structs::vector::Vector;
 use crate::num_traits::scalar::Scalar;
 // use num::Scalar;
 use std::clone::Clone;
-use std::default::Default;
+// use std::default::Default;
 use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::{Add, Mul, Sub};
@@ -15,7 +15,7 @@ pub type TMatrix4<T> = TMatrix<T, 4>;
 
 #[derive(PartialEq, Debug, Clone)]
 pub struct Matrix<T, const M: usize, const N: usize> {
-    data: Vec<Vec<T>>,
+    pub(crate) data: Vec<Vec<T>>,
 }
 
 impl<T: Clone, const M: usize, const N: usize> From<[[T; N]; M]> for Matrix<T, M, N> {
@@ -163,16 +163,6 @@ impl<T: Scalar, const M: usize, const N: usize> Mul<T> for Matrix<T, M, N> {
             res.push(v);
         }
         Matrix { data: res }
-    }
-}
-
-impl<T: Scalar, const N: usize> Matrix<T, N, N> {
-    pub fn trace(&mut self) -> T {
-        let mut res = T::zero();
-        for i in 0..N {
-            res = res + self.data[i][i];
-        }
-        res
     }
 }
 

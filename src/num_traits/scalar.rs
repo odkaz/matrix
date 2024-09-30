@@ -7,7 +7,7 @@ pub trait Scalar: Display + Debug + Clone + Copy + Add<Output = Self> + Mul<Outp
     fn abs(&self) -> Self;
     fn sqrt(&self) -> Self;
     fn powi(&self, i: i32) -> Self;
-    fn scl(&self, s: Self) -> Self;
+    // fn scl(&self, s: Self) -> Self;
 }
 
 impl Scalar for f32 {
@@ -26,7 +26,7 @@ impl Scalar for f32 {
     fn powi(&self, i: i32) -> f32 {
         f32::powi(*self, i)
     }
-    fn scl(&self, s: Self) -> f32 {
-        f32::scl(self, s)
-    }
+    // fn scl(&self, s: Self) -> f32 {
+    //     f32::scl(self, s)
+    // }
 }
