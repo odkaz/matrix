@@ -3,10 +3,10 @@ use crate::num_traits::scalar::Scalar;
 // use num::Scalar;
 use std::clone::Clone;
 // use std::default::Default;
+use std::convert::TryInto;
 use std::fmt::Debug;
 use std::fmt::Display;
 use std::ops::{Add, Mul, Sub};
-use std::convert::TryInto;
 
 pub type TMatrix<T, const M: usize> = Matrix<T, M, M>;
 pub type TMatrix2<T> = TMatrix<T, 2>;
@@ -54,9 +54,7 @@ impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
     }
 }
 
-impl<T: Scalar, const M: usize, const N: usize> Add<Matrix<T, M, N>>
-    for Matrix<T, M, N>
-{
+impl<T: Scalar, const M: usize, const N: usize> Add<Matrix<T, M, N>> for Matrix<T, M, N> {
     type Output = Matrix<T, M, N>;
     fn add(self, v: Matrix<T, M, N>) -> Matrix<T, M, N> {
         let mut res = Vec::new();
@@ -93,9 +91,7 @@ impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
     }
 }
 
-impl<T: Scalar, const M: usize, const N: usize> Sub<Matrix<T, M, N>>
-    for Matrix<T, M, N>
-{
+impl<T: Scalar, const M: usize, const N: usize> Sub<Matrix<T, M, N>> for Matrix<T, M, N> {
     type Output = Matrix<T, M, N>;
     fn sub(self, v: Matrix<T, M, N>) -> Matrix<T, M, N> {
         let mut res = Vec::new();
@@ -129,9 +125,9 @@ impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
     }
 }
 
-
-
-impl<T: Scalar, const M: usize, const N: usize, const H: usize> Mul<Matrix<T, N, H>> for Matrix<T, M, N> {
+impl<T: Scalar, const M: usize, const N: usize, const H: usize> Mul<Matrix<T, N, H>>
+    for Matrix<T, M, N>
+{
     type Output = Matrix<T, M, H>;
     fn mul(self, rhs: Matrix<T, N, H>) -> Matrix<T, M, H> {
         let mut res = Vec::new();
@@ -159,20 +155,6 @@ impl<T: Scalar, const M: usize, const N: usize> Mul<T> for Matrix<T, M, N> {
             for i in 0..N {
                 let sum = self.data[j][i] * rhs;
                 v.push(sum);
-            }
-            res.push(v);
-        }
-        Matrix { data: res }
-    }
-}
-
-impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
-    pub fn transpose(&mut self) -> Matrix<T, N, M> {
-        let mut res = Vec::new();
-        for j in 0..N {
-            let mut v = Vec::new();
-            for i in 0..M {
-                v.push(self.data[i][j]);
             }
             res.push(v);
         }
