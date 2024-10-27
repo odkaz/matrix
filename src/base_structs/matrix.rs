@@ -1,8 +1,6 @@
 use crate::base_structs::vector::Vector;
 use crate::num_traits::scalar::Scalar;
-// use num::Scalar;
 use std::clone::Clone;
-// use std::default::Default;
 use std::convert::TryInto;
 use std::fmt::Debug;
 use std::fmt::Display;
