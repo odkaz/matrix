@@ -192,22 +192,6 @@ impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
     }
 }
 
-// impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
-//     pub fn rank(&mut self) -> usize {
-//         let mat = self.row_echelon().as_arr();
-//         let mut res: usize = 0;
-//         for m in 0..M {
-//             for n in m..N {
-//                 if mat[m][n] != T::zero() {
-//                     res = res + 1;
-//                     break;
-//                 }
-//             }
-//         }
-//         res
-//     }
-// }
-
 impl<T: Display, const M: usize, const N: usize> Display for Matrix<T, M, N> {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         for j in 0..M {
