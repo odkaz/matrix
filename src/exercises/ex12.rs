@@ -80,8 +80,9 @@ impl<T: Scalar, const M: usize> TMatrix<T, M> {
     }
 }
 #[cfg(test)]
-mod tests {
+mod inverse {
     use super::*;
+    use crate::utils::comp::matrices_are_equal;
 
     #[test]
     fn test_inverse_identity() {
@@ -117,6 +118,6 @@ mod tests {
         let mut matrix = Matrix::from([[3.0, 0.0, 2.0], [2.0, 0.0, -2.0], [0.0, 1.0, 1.0]]);
         let expected_inverse = Matrix::from([[0.2, 0.2, 0.0], [-0.2, 0.3, 1.0], [0.2, -0.3, 0.0]]);
         let inverse_matrix = matrix.inverse().unwrap();
-        assert_eq!(inverse_matrix, expected_inverse);
+        assert!(matrices_are_equal(&inverse_matrix, &expected_inverse));
     }
 }

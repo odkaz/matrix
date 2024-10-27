@@ -57,69 +57,56 @@ impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
     }
 }
 
-#[test]
-fn test_row_echelon_identity_matrix() {
-    let mut matrix = Matrix::from([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]);
-    let result = matrix.row_echelon();
-    assert_eq!(
-        result,
-        Matrix::from([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0],])
-    );
-}
+#[cfg(test)]
+mod row_echelon {
+    use super::*;
+    use crate::utils::comp::matrices_are_equal;
 
-#[test]
-fn test_row_echelon_non_square_matrix() {
-    let mut matrix = Matrix::from([[1.0, 2.0], [3.0, 4.0]]);
-    let result = matrix.row_echelon();
-    assert_eq!(result, Matrix::from([[1.0, 0.0], [0.0, 1.0],]));
-}
-
-#[test]
-fn test_row_echelon_singular_matrix() {
-    let mut matrix = Matrix::from([[1.0, 2.0], [2.0, 4.0]]);
-    let result = matrix.row_echelon();
-    assert_eq!(result, Matrix::from([[1.0, 2.0], [0.0, 0.0],]));
-}
-
-#[test]
-
-fn test_row_echelon_larger_matrix() {
-    const EPSILON: f32 = 1e-6;
-
-    fn floats_are_equal(a: f32, b: f32) -> bool {
-        (a - b).abs() < EPSILON
+    #[test]
+    fn test_row_echelon_identity_matrix() {
+        let mut matrix = Matrix::from([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]);
+        let result = matrix.row_echelon();
+        assert_eq!(
+            result,
+            Matrix::from([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0],])
+        );
     }
 
-    fn matrices_are_equal<const M: usize, const N: usize>(
-        a: &Matrix<f32, M, N>,
-        b: &Matrix<f32, M, N>,
-    ) -> bool {
-        for i in 0..a.data.len() {
-            for j in 0..a.data[i].len() {
-                if !floats_are_equal(a.data[i][j], b.data[i][j]) {
-                    return false;
-                }
-            }
-        }
-        true
+    #[test]
+    fn test_row_echelon_non_square_matrix() {
+        let mut matrix = Matrix::from([[1.0, 2.0], [3.0, 4.0]]);
+        let result = matrix.row_echelon();
+        assert_eq!(result, Matrix::from([[1.0, 0.0], [0.0, 1.0],]));
     }
-    let mut matrix = Matrix::from([
-        [8.0, 5.0, -2.0, 4.0, 28.0],
-        [4.0, 2.5, 20.0, 4.0, -4.0],
-        [8.0, 5.0, 1.0, 4.0, 17.0],
-    ]);
-    let result = matrix.row_echelon();
 
-    let expected = Matrix::from([
-        [1.0, 0.625, 0.0, 0.0, -12.1666667],
-        [0.0, 0.0, 1.0, 0.0, -3.6666667],
-        [0.0, 0.0, 0.0, 1.0, 29.5],
-    ]);
+    #[test]
+    fn test_row_echelon_singular_matrix() {
+        let mut matrix = Matrix::from([[1.0, 2.0], [2.0, 4.0]]);
+        let result = matrix.row_echelon();
+        assert_eq!(result, Matrix::from([[1.0, 2.0], [0.0, 0.0],]));
+    }
 
-    assert!(
-        matrices_are_equal(&result, &expected),
-        "The matrices are not approximately equal: {:?} vs {:?}",
-        result,
-        expected
-    );
+    #[test]
+
+    fn test_row_echelon_larger_matrix() {
+        let mut matrix = Matrix::from([
+            [8.0, 5.0, -2.0, 4.0, 28.0],
+            [4.0, 2.5, 20.0, 4.0, -4.0],
+            [8.0, 5.0, 1.0, 4.0, 17.0],
+        ]);
+        let result = matrix.row_echelon();
+
+        let expected = Matrix::from([
+            [1.0, 0.625, 0.0, 0.0, -12.1666667],
+            [0.0, 0.0, 1.0, 0.0, -3.6666667],
+            [0.0, 0.0, 0.0, 1.0, 29.5],
+        ]);
+
+        assert!(
+            matrices_are_equal(&result, &expected),
+            "The matrices are not approximately equal: {:?} vs {:?}",
+            result,
+            expected
+        );
+    }
 }
