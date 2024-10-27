@@ -1,10 +1,12 @@
 use crate::base_structs::vector::Vector;
-use crate::num_traits::scalar::Scalar;
 use crate::exercises::ex04;
+use crate::num_traits::scalar::Scalar;
 use std::ops::{Add, Div};
 
-pub fn angle_cos<T: Scalar + Into<f32> + Add<f32, Output = f32> + Div<f32, Output = f32>, const N: usize>
-(
+pub fn angle_cos<
+    T: Scalar + Into<f32> + Add<f32, Output = f32> + Div<f32, Output = f32>,
+    const N: usize,
+>(
     u: &Vector<T, N>,
     v: &Vector<T, N>,
 ) -> f32 {

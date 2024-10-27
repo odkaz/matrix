@@ -193,42 +193,6 @@ impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
 }
 
 impl<T: Scalar, const M: usize> TMatrix<T, M> {
-    fn _deter(&self, data: Vec<Vec<T>>, size: usize) -> T {
-        if size == 1 {
-            return data[0][0];
-        }
-        if size == 2 {
-            return (data[0][0] * data[1][1]) - (data[0][1] * data[1][0]);
-        }
-        let mut res = T::zero();
-        for i in 0..size {
-            let coef = data[0][i];
-            let mut sign = T::one();
-            if i % 2 == 1 {
-                sign = -T::one();
-            }
-            let mut vec2d = Vec::new();
-            for o in 1..size {
-                let mut v = Vec::new();
-                for l in 0..size {
-                    if l != i {
-                        v.push(data[o][l]);
-                    }
-                }
-                vec2d.push(v);
-            }
-            let rhs = coef * sign * self._deter(vec2d, size - 1);
-            res = res + rhs;
-        }
-        res
-    }
-
-    pub fn determinant(&mut self) -> T {
-        self._deter(self.data.clone(), M)
-    }
-}
-
-impl<T: Scalar, const M: usize> TMatrix<T, M> {
     fn _identity() -> [[T; M]; M] {
         let mut arr = [[T::zero(); M]; M];
         for i in 0..M {
