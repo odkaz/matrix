@@ -1,4 +1,3 @@
-use crate::base_structs::matrix::Matrix;
 use crate::base_structs::matrix::TMatrix;
 use crate::num_traits::scalar::Scalar;
 
@@ -38,43 +37,48 @@ impl<T: Scalar, const M: usize> TMatrix<T, M> {
     }
 }
 
-#[test]
-fn test_determinant_1x1() {
-    let mut matrix = Matrix::from([[1.0]]);
-    assert_eq!(matrix.determinant(), 1.0);
-}
+#[cfg(test)]
+mod determinant {
+    use crate::base_structs::matrix::Matrix;
 
-#[test]
-fn test_determinant_2x2() {
-    let mut matrix = Matrix::from([[1.0, 2.0], [3.0, 4.0]]);
-    assert_eq!(matrix.determinant(), -2.0);
-}
+    #[test]
+    fn test_determinant_1x1() {
+        let mut matrix = Matrix::from([[1.0]]);
+        assert_eq!(matrix.determinant(), 1.0);
+    }
 
-#[test]
-fn test_determinant_3x3() {
-    let mut matrix = Matrix::from([[6.0, 1.0, 1.0], [4.0, -2.0, 5.0], [2.0, 8.0, 7.0]]);
-    assert_eq!(matrix.determinant(), -306.0);
-}
+    #[test]
+    fn test_determinant_2x2() {
+        let mut matrix = Matrix::from([[1.0, 2.0], [3.0, 4.0]]);
+        assert_eq!(matrix.determinant(), -2.0);
+    }
 
-#[test]
-fn test_determinant_4x4() {
-    let mut matrix = Matrix::from([
-        [1.0, 0.0, 2.0, -1.0],
-        [3.0, 0.0, 0.0, 5.0],
-        [2.0, 1.0, 4.0, -3.0],
-        [1.0, 0.0, 5.0, 0.0],
-    ]);
-    assert_eq!(matrix.determinant(), 30.0);
-}
+    #[test]
+    fn test_determinant_3x3() {
+        let mut matrix = Matrix::from([[6.0, 1.0, 1.0], [4.0, -2.0, 5.0], [2.0, 8.0, 7.0]]);
+        assert_eq!(matrix.determinant(), -306.0);
+    }
 
-#[test]
-fn test_determinant_zero_matrix() {
-    let mut matrix = Matrix::from([[0.0, 0.0], [0.0, 0.0]]);
-    assert_eq!(matrix.determinant(), 0.0);
-}
+    #[test]
+    fn test_determinant_4x4() {
+        let mut matrix = Matrix::from([
+            [1.0, 0.0, 2.0, -1.0],
+            [3.0, 0.0, 0.0, 5.0],
+            [2.0, 1.0, 4.0, -3.0],
+            [1.0, 0.0, 5.0, 0.0],
+        ]);
+        assert_eq!(matrix.determinant(), 30.0);
+    }
 
-#[test]
-fn test_determinant_identity_matrix() {
-    let mut matrix = Matrix::from([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]);
-    assert_eq!(matrix.determinant(), 1.0);
+    #[test]
+    fn test_determinant_zero_matrix() {
+        let mut matrix = Matrix::from([[0.0, 0.0], [0.0, 0.0]]);
+        assert_eq!(matrix.determinant(), 0.0);
+    }
+
+    #[test]
+    fn test_determinant_identity_matrix() {
+        let mut matrix = Matrix::from([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]);
+        assert_eq!(matrix.determinant(), 1.0);
+    }
 }

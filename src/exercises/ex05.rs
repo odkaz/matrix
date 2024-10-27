@@ -1,5 +1,4 @@
 use crate::base_structs::vector::Vector;
-use crate::exercises::ex04;
 use crate::num_traits::scalar::Scalar;
 use std::ops::{Add, Div};
 
