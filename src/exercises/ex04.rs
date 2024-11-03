@@ -26,13 +26,20 @@ impl<T: Scalar + Into<f32> + Add<f32, Output = f32>, const N: usize> Vector<T, N
     }
 
     pub fn norm_inf(&mut self) -> f32 {
-        let b = self.as_vec();
-        let max = b
-            .iter()
-            .max_by(|x, y| x.abs().partial_cmp(&y.abs()).unwrap())
-            .unwrap();
-        let cast: f32 = max.clone().abs().into();
-        cast
+        let b = self.as_slice();
+    
+        let mut max_value = f32::MIN;
+        
+        for &value in b.iter() {
+            let value_f32: f32 = value.into();
+            let abs_value = if value_f32 < 0.0 { -value_f32 } else { value_f32 };
+            
+            if abs_value > max_value {
+                max_value = abs_value;
+            }
+        }
+        
+        max_value
     }
 }
 
