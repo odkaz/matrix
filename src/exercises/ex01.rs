@@ -34,4 +34,41 @@ mod linear_combination {
         let ans2 = Vector::from([10.0, 0.0, 230.]);
         assert_eq!(res2, ans2);
     }
+
+    #[test]
+    fn test02() {
+        let e1 = Vector::from([1., 0.]);
+        let e2 = Vector::from([0., 1.]);
+        let res = Vector::linear_combination(&[e1, e2], &[3., 4.]);
+        let ans = Vector::from([3.0, 4.0]);
+        assert_eq!(res, ans);
+    }
+
+    #[test]
+    fn test03() {
+        let e1 = Vector::from([1., 0., 0., 0.]);
+        let e2 = Vector::from([0., 1., 0., 0.]);
+        let e3 = Vector::from([0., 0., 1., 0.]);
+        let e4 = Vector::from([0., 0., 0., 1.]);
+        let res = Vector::linear_combination(&[e1, e2, e3, e4], &[1., 2., 3., 4.]);
+        let ans = Vector::from([1.0, 2.0, 3.0, 4.0]);
+        assert_eq!(res, ans);
+    }
+
+    #[test]
+    fn test04() {
+        let e1 = Vector::from([1., 1., 1.]);
+        let e2 = Vector::from([2., 2., 2.]);
+        let res = Vector::linear_combination(&[e1, e2], &[1., 1.]);
+        let ans = Vector::from([3.0, 3.0, 3.0]);
+        assert_eq!(res, ans);
+    }
+
+    #[test]
+    #[should_panic(expected = "The length of vectors and coefficients must match")]
+    fn test_panic() {
+        let e1 = Vector::from([1., 0., 0.]);
+        let e2 = Vector::from([0., 1., 0.]);
+        Vector::linear_combination(&[e1, e2], &[1.]);
+    }
 }
