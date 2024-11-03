@@ -6,7 +6,6 @@ impl<T: Scalar + Into<f32> + Add<f32, Output = f32>, const N: usize> Vector<T, N
     pub fn norm_1(&mut self) -> f32 {
         let mut res = f32::zero();
         let v = self.as_slice();
-        println!("v {:?}", v);
         for i in 0..N {
             if v[i] < T::zero() {
                 res = -v[i] + res;
