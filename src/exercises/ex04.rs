@@ -8,7 +8,11 @@ impl<T: Scalar + Into<f32> + Add<f32, Output = f32>, const N: usize> Vector<T, N
         let v = self.as_slice();
         println!("v {:?}", v);
         for i in 0..N {
-            res = v[i].abs() + res;
+            if v[i] < T::zero() {
+                res = -v[i] + res;
+            } else {
+                res = v[i] + res;
+            }
         }
         res
     }
