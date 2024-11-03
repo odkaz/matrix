@@ -3,7 +3,6 @@ use std::ops::{Add, Div, Index, Mul, Sub};
 extern crate num;
 use crate::num_traits::scalar::Scalar;
 
-// use num::Scalar;
 pub type TVector<T, const R: usize> = Vector<T, R>;
 pub type TVector2<T> = TVector<T, 2>;
 pub type TVector3<T> = TVector<T, 3>;
@@ -55,17 +54,6 @@ impl<T: Scalar, const N: usize> Add<Vector<T, N>> for Vector<T, N> {
         Vector::from(res)
     }
 }
-
-// impl<T: Clone, const N: usize> Add<&Vector<T, N>> for &Vector<T, N> {
-//     type Output = Vector<T, N>;
-//     fn add(self, rhs: &Vector<T, N>) -> Vector<T, N> {
-//         let mut res = Vec::new();
-//         for i in 0..N {
-//             res.push(self.data[i].clone() + rhs.data[i].clone());
-//         }
-//         Vector { data: res }
-//     }
-// }
 
 impl<T: Scalar, const N: usize> Mul<T> for Vector<T, N> {
     type Output = Vector<T, N>;
@@ -154,9 +142,6 @@ impl<T: Display, const N: usize> Display for Vector<T, N> {
     }
 }
 
-
-
-
 impl<T, const N: usize> Vector<T, N> {
     pub fn as_slice(&self) -> &[T] {
         self.data.as_slice()
@@ -193,17 +178,3 @@ impl<T: Scalar, const N: usize> Vector<T, N> {
         Vector { data: res.clone() }
     }
 }
-
-
-
-// impl<T: Scalar> TVector3<T> {
-//     pub fn cross_product(u: &TVector3<T>, v: &TVector3<T>) -> TVector3<T> {
-//         let mut res = [T::zero(); 3];
-//         let u_arr = u.as_slice();
-//         let v_arr = v.as_slice();
-//         res[0] = u_arr[1] * v_arr[2] - u_arr[2] * v_arr[1];
-//         res[1] = u_arr[2] * v_arr[0] - u_arr[0] * v_arr[2];
-//         res[2] = u_arr[0] * v_arr[1] - u_arr[1] * v_arr[0];
-//         Vector::from(res)
-//     }
-// }
