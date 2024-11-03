@@ -3,6 +3,9 @@ use crate::num_traits::scalar::Scalar;
 
 impl<T: Scalar, const N: usize> Vector<T, N> {
     pub fn linear_combination(u: &[Vector<T, N>], coefs: &[T]) -> Vector<T, N> {
+        if u.len() != coefs.len() {
+            panic!("The length of vectors and coefficients must match");
+        }
         let mut res = Vector::from([T::zero(); N]);
         for (i, item) in u.iter().enumerate() {
             let mut tmp = item.clone();
