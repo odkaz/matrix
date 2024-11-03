@@ -3,6 +3,7 @@ use crate::base_structs::vector::Vector;
 use std::ops::Add;
 
 impl<T: Scalar + Into<f32> + Add<f32, Output = f32>, const N: usize> Vector<T, N> {
+    //sum of absolute values
     pub fn norm_1(&mut self) -> f32 {
         let mut res = f32::zero();
         let v = self.as_slice();
@@ -15,7 +16,7 @@ impl<T: Scalar + Into<f32> + Add<f32, Output = f32>, const N: usize> Vector<T, N
         }
         res
     }
-
+    //euclidean norm: straight line distance from the origin
     pub fn norm(&mut self) -> f32 {
         let mut res = f32::zero();
         for i in self.as_vec().iter() {
@@ -23,7 +24,7 @@ impl<T: Scalar + Into<f32> + Add<f32, Output = f32>, const N: usize> Vector<T, N
         }
         f32::sqrt(res)
     }
-
+    //maximum absolute value
     pub fn norm_inf(&mut self) -> f32 {
         let b = self.as_slice();
     
