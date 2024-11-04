@@ -4,7 +4,6 @@ use crate::num_traits::scalar::Scalar;
 impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
     //useful for changing rows to columns and columns to rows
     //opposite rotation matrix can be made by transposing the matrix, useful in computer graphics
-    //can solve simultaneous equations for example
     pub fn transpose(&mut self) -> Matrix<T, N, M> {
         let mut res = Vec::new();
         for j in 0..N {

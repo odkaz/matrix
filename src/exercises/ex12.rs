@@ -19,6 +19,8 @@ impl<T: Scalar, const M: usize> TMatrix<T, M> {
         }
     }
 
+    //can solve simultaneous equations for example
+    //makes a matrix that has opposite effect of the original matrix
     pub fn inverse(&mut self) -> Result<TMatrix<T, M>, String> {
         let det = self.determinant();
         if det == T::zero() {
