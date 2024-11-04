@@ -3,6 +3,7 @@ use crate::num_traits::scalar::Scalar;
 
 impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
     //number of dementions in the output space of the matrix
+    //count the number of non zero rows in the row echelon form
     pub fn rank(&mut self) -> usize {
         let mat = self.row_echelon().as_arr();
         let mut res: usize = 0;
