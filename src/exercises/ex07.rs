@@ -4,6 +4,7 @@ use crate::base_structs::vector::Vector;
 
 
 impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N>{
+    //alteratively we can use mul_vec for each columns of the matrix
     pub fn mul_mat<const H: usize>(&mut self, rhs: &Matrix<T, N, H>) -> Matrix<T, M, H> {
         let mut res = [[T::zero(); H]; M];
         let d = self.as_arr();
@@ -19,7 +20,8 @@ impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N>{
         }
         Matrix::from(res)
     }
-
+    //matrix shows where i hat and j hat are mapped to.
+    //if you multiply a vector by a matrix, the vector is transformed by the matrix
     pub fn mul_vec(&mut self, rhs: &Vector<T, N>) -> Vector<T, N> {
         let mut res = [T::zero(); N];
         let d = self.as_arr();
