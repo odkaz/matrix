@@ -34,7 +34,8 @@ impl<T: Scalar, const M: usize> TMatrix<T, M> {
             if d[i][i] == T::zero() {
                 let mut big = i;
                 for j in 0..M {
-                    if T::abs(&d[j][i]) > T::abs(&d[big][i]) {
+                    //compare without sign
+                    if d[j][i] * d[j][i] > d[big][i] * d[big][i] {
                         big = j;
                     }
                 }
