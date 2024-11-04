@@ -4,6 +4,8 @@ use crate::base_structs::vector::Vector;
 impl<T: Scalar, const N: usize>
     Vector<T, N>
 {
+    //dot product is useful for finding the angle between two vectors
+    //if the dot product is 0, the vectors are perpendicular
     pub fn dot(&self, v: &Vector<T, N>) -> T {
         let mut res = T::zero();
         for (item1, item2) in self.as_vec().iter().zip(v.as_vec().iter()) {
