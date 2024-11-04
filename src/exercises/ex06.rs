@@ -17,17 +17,23 @@ mod cross_product {
     use super::*;
 
     #[test]
-    fn test_cross() {
+    fn test_cross_1() {
         let u = Vector::from([0., 0., 1.]);
         let v = Vector::from([1., 0., 0.]);
         println!("{}", cross_product(&u, &v));
         assert_eq!(cross_product(&u, &v), Vector::from([0., 1., 0.]));
+    }
 
+    #[test]
+    fn test_cross_2() {
         let u = Vector::from([1., 2., 3.]);
         let v = Vector::from([4., 5., 6.]);
         println!("{}", cross_product(&u, &v));
         assert_eq!(cross_product(&u, &v), Vector::from([-3., 6., -3.]));
+    }
 
+    #[test]
+    fn test_cross_3() {
         let u = Vector::from([4., 2., -3.]);
         let v = Vector::from([-2., -5., 16.]);
         println!("{}", cross_product(&u, &v));
