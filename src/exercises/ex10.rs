@@ -14,7 +14,9 @@ impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
     pub fn row_echelon(&mut self) -> Matrix<T, M, N> {
         let mut lead: usize = 0;
         for j in 0..M {
+            // Check if the current row is all zeros
             if self.is_all_zero(j) {
+                // Find a non-zero row from the bottom and swap it with the current row
                 for k in 0..M - j {
                     let index = M - k - 1;
                     let l = self.as_vector(index);
@@ -28,13 +30,13 @@ impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
             for i in 0..N {
                 let mut v = self.as_vector(j);
 
-                //find the lead
+                // Find the lead (first non-zero element) in the current row
                 if self.data[j][i] != T::zero() && i >= lead {
-                    //lead to 1
+                    // Normalize the row so that the lead is 1
                     v = v.clone() / v[i];
                     self.data[j] = v.as_vec();
 
-                    //pivot column to 0
+                    // Make all elements in the pivot column (except the lead) zero
                     for x in 0..M {
                         if x == j {
                             continue;
@@ -51,6 +53,7 @@ impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
                 }
             }
         }
+        // Return the resulting matrix in row echelon form
         Matrix {
             data: self.data.clone(),
         }
