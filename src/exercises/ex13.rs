@@ -2,6 +2,7 @@ use crate::base_structs::matrix::Matrix;
 use crate::num_traits::scalar::Scalar;
 
 impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N> {
+    //number of dementions in the output space of the matrix
     pub fn rank(&mut self) -> usize {
         let mat = self.row_echelon().as_arr();
         let mut res: usize = 0;
