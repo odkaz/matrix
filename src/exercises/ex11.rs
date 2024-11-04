@@ -2,6 +2,9 @@ use crate::base_structs::matrix::TMatrix;
 use crate::num_traits::scalar::Scalar;
 
 impl<T: Scalar, const M: usize> TMatrix<T, M> {
+    //determinant tells us how much the matrix scales the area of a shape
+    //if the determinant is 0, the matrix collapses the shape to a line or a point
+    //if the determinant is negative, the matrix flips the shape
     fn _deter(&self, data: Vec<Vec<T>>, size: usize) -> T {
         if size == 1 {
             return data[0][0];
