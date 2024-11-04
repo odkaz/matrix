@@ -1,6 +1,7 @@
+use crate::base_structs::vector::{TVector3, Vector};
 use crate::num_traits::scalar::Scalar;
-use crate::base_structs::vector::{Vector, TVector3};
 
+// creates a new vector that is perpendicular to the two input vectors
 pub fn cross_product<T: Scalar>(u: &TVector3<T>, v: &TVector3<T>) -> TVector3<T> {
     let mut res = [T::zero(); 3];
     let u_arr = u.as_slice();
