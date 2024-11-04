@@ -26,7 +26,6 @@ impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N>{
         for j in 0..M {
             let mut sum: T = T::zero();
             for i in 0..N {
-                println!("i{}", i);
                 sum = sum + (d[j][i] * rhs[i]);
             }
             res[j] = sum;
@@ -39,27 +38,42 @@ impl<T: Scalar, const M: usize, const N: usize> Matrix<T, M, N>{
 mod mul {
     use super::*;
     #[test]
-    fn test_mul() {
+    fn test_mul_vec_identity() {
         let mut u = Matrix::from([[1., 0.], [0., 1.]]);
         let v = Vector::from([4., 2.]);
         assert_eq!(u.mul_vec(&v), Vector::from([4., 2.]));
+    }
 
+    #[test]
+    fn test_mul_vec_scaling() {
         let mut u = Matrix::from([[2., 0.], [0., 2.]]);
         let v = Vector::from([4., 2.]);
         assert_eq!(u.mul_vec(&v), Vector::from([8., 4.]));
+    }
 
+    #[test]
+    fn test_mul_vec_mixed() {
         let mut u = Matrix::from([[2., -2.], [-2., 2.]]);
         let v = Vector::from([4., 2.]);
         assert_eq!(u.mul_vec(&v), Vector::from([4., -4.]));
+    }
 
+    #[test]
+    fn test_mul_mat_identity() {
         let mut u = Matrix::from([[1., 0.], [0., 1.]]);
         let v = Matrix::from([[1., 0.], [0., 1.]]);
         assert_eq!(u.mul_mat(&v), Matrix::from([[1., 0.], [0., 1.]]));
+    }
 
+    #[test]
+    fn test_mul_mat_simple() {
         let mut u = Matrix::from([[1., 0.], [0., 1.]]);
         let v = Matrix::from([[2., 1.], [4., 2.]]);
         assert_eq!(u.mul_mat(&v), Matrix::from([[2., 1.], [4., 2.]]));
+    }
 
+    #[test]
+    fn test_mul_mat_complex() {
         let mut u = Matrix::from([[3., -5.], [6., 8.]]);
         let v = Matrix::from([[2., 1.], [4., 2.]]);
         assert_eq!(u.mul_mat(&v), Matrix::from([[-14., -7.], [44., 22.]]));
