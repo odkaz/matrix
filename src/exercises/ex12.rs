@@ -19,6 +19,7 @@ impl<T: Scalar, const M: usize> TMatrix<T, M> {
         }
     }
 
+    //make a matrix into identity matrix by row operations, then you get the inverse
     //can solve simultaneous equations for example
     //makes a matrix that has opposite effect of the original matrix
     pub fn inverse(&mut self) -> Result<TMatrix<T, M>, String> {
