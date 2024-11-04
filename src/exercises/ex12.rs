@@ -24,7 +24,7 @@ impl<T: Scalar, const M: usize> TMatrix<T, M> {
     pub fn inverse(&mut self) -> Result<TMatrix<T, M>, String> {
         let det = self.determinant();
         if det == T::zero() {
-            panic!("determinant is zero")
+            return Err(String::from("matrix is singular"));
         }
         let mut res = TMatrix::<T, M>::_identity();
         let mut d = self.as_arr();
@@ -39,7 +39,7 @@ impl<T: Scalar, const M: usize> TMatrix<T, M> {
                     }
                 }
                 if big == i {
-                    panic!("singular matrix");
+                    return Err(String::from("matrix is singular"));
                 }
                 TMatrix::<T, M>::_swap_row(&mut res, i, big);
                 TMatrix::<T, M>::_swap_row(&mut d, i, big);
@@ -102,10 +102,11 @@ mod inverse {
     }
 
     #[test]
-    #[should_panic(expected = "determinant is zero")]
     fn test_inverse_singular() {
         let mut singular_matrix = Matrix::from([[1.0, 2.0], [2.0, 4.0]]);
-        singular_matrix.inverse().unwrap();
+        let result = singular_matrix.inverse();
+        assert!(result.is_err());
+        assert_eq!(result.err().unwrap(), "matrix is singular");
     }
 
     #[test]
