@@ -44,6 +44,7 @@ impl<T: Scalar, const M: usize> TMatrix<T, M> {
 
     pub fn determinant(&mut self) -> T {
         //Recursive call to _deter
+        //Time complexity is O(n!) because of the recursive calls, but it is not a problem for n ≤ 4
         self._deter(self.data.clone(), M)
     }
 }
